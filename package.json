@@ -1,0 +1,26 @@
+{
+  "name": "personal-nutritionist-backend",
+  "version": "1.0.0",
+  "description": "![Git](https://img.shields.io/badge/git%20-%23F05033.svg?&style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github%20-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fullstacktf/personal-nutritionist-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fullstacktf/personal-nutritionist-backend/issues"
+  },
+  "homepage": "https://github.com/fullstacktf/personal-nutritionist-backend#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
+    "eslint": "^8.2.0",
+    "typescript": "^4.4.4"
+  }
+}
