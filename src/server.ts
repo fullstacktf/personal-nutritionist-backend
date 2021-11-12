@@ -1,5 +1,8 @@
-import express, { response } from 'express';
+import express from "express";
 const app = express();
+const clientsRouter = require("./api/clients");
 
 app.use(express.json());
-app.listen(3000, () => console.log("Holiwi 🥑"));
+app.use("/clients", clientsRouter);
+
+app.listen(3000);
