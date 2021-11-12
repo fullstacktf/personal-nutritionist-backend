@@ -1,0 +1,16 @@
+[
+  {
+    "user_id": 1,
+    "email": "lalolita@gmail.com",
+    "username": "Lola",
+    "role": "client",
+    "password": "lalola1234"
+  },
+  {
+    "user_id": 2,
+    "email": "elpanadero@gmail.com",
+    "username": "Juan",
+    "role": "client",
+    "password": "elpanesmipasion"
+  }
+]
