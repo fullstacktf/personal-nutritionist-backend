@@ -21,6 +21,5 @@
     "indent": ["error", 2],
     "comma-dangle": ["error", "only-multiline"],
     "space-before-function-paren": ["error", "never"]
-
   }
 }
