@@ -39,3 +39,36 @@ func PostClients(c *gin.Context) {
 	clients = append(clients, newClient)
 	c.IndentedJSON(http.StatusCreated, newClient)
 }
+
+func UpdateClient(c *gin.Context) {
+	id := c.Param("id")
+	var UpdatedClient models.Client
+
+	if err := c.BindJSON(&UpdatedClient); err != nil {
+		return
+	}
+
+	for index, client := range clients {
+		if id == client.ID {
+			clients[index] = UpdatedClient
+			c.IndentedJSON(http.StatusOK, UpdatedClient)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "client not found 💣"})
+}
+
+func DeleteClient(c *gin.Context) {
+	id := c.Param("id")
+	var DeletedClient models.Client
+	for index, client := range clients {
+		if id == client.ID {
+			copy(clients[index:], clients[index+1:])
+			clients[len(clients)-1] = DeletedClient
+			clients = clients[:len(clients)-1]
+			c.IndentedJSON(http.StatusOK, gin.H{"message": "client deleted 🧹"})
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "client not found 💣"})
+}
