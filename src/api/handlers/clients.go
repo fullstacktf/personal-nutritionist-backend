@@ -29,7 +29,7 @@ func GetClientbyID(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "client not found 💣"})
 }
 
-func PostClients(c *gin.Context) {
+func PostClient(c *gin.Context) {
 	var newClient models.Client
 
 	if err := c.BindJSON(&newClient); err != nil {
@@ -48,9 +48,9 @@ func UpdateClient(c *gin.Context) {
 		return
 	}
 
-	for index, client := range clients {
+	for _, client := range clients {
 		if id == client.ID {
-			clients[index] = UpdatedClient
+			client = UpdatedClient
 			c.IndentedJSON(http.StatusOK, UpdatedClient)
 			return
 		}

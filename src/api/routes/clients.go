@@ -10,7 +10,7 @@ func StartClients(router *gin.Engine) {
 	{
 		clients.GET("/", handlers.GetClients)
 		clients.GET("/:id", handlers.GetClientbyID)
-		clients.POST("/", handlers.PostClients)
+		clients.POST("/", handlers.PostClient)
 		clients.PUT("/:id", handlers.UpdateClient)
 		clients.DELETE("/:id", handlers.DeleteClient)
 	}
