@@ -16,7 +16,7 @@ func main() {
 		})
 	})
 
-	routes.StartClients(router)
+	routes.StartUsers(router)
 
 	router.NoRoute(func(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
