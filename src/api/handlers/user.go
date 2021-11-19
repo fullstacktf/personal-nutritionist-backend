@@ -13,8 +13,10 @@ var users = []models.User{
 	{ID: "3", Name: "Sarah Vaughan", Dni: "12345678P", TypeDiet: "vegetarian", Weight: 60, Height: 173, Role: "Client"},
 }
 
-func GetUsers(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, users)
+func GetUsers() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		context.IndentedJSON(http.StatusOK, users)
+	}
 }
 
 func GetUserByID(c *gin.Context) {
