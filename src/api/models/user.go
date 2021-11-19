@@ -1,12 +1,12 @@
 package models
 
 type BasicUser struct {
-	ID          string `json:"id" binding:"required"`
-	Name        string `json:"name" binding:"required"`
-	Email       string `json:"email" binding:"required"`
-	Phone       uint32 `json:"phone"`
-	Photo       string `json:"photo"`
-	Is_verified bool   `json:"is_verified"`
+	ID         string `json:"id" binding:"required"`
+	Name       string `json:"name" binding:"required"`
+	Email      string `json:"email" binding:"required"`
+	Phone      uint32 `json:"phone"`
+	Photo      string `json:"photo"`
+	IsVerified bool   `json:"isVerified"`
 }
 
 type User struct {
@@ -25,7 +25,7 @@ type User struct {
 	// Recipes			[]Recipe	`json:"recipe"`
 
 	// Nutricionist
-	Is_verified bool        `json:"is_verified"`
+	IsVerified  bool        `json:"isVerified"`
 	Education   []string    `json:"education"`
 	Specialties []string    `json:"specialties"`
 	Price       float64     `json:"price"`
@@ -35,7 +35,7 @@ type User struct {
 	// Client
 	Weight        uint        `json:"weight"`
 	Height        uint        `json:"height"`
-	Type_diet     string      `json:"type_diet"`
+	TypeDiet      string      `json:"typeDiet"`
 	Intolerances  []string    `json:"intolerances"`
 	Nutricionists []BasicUser `json:"nutricionists"`
 }
