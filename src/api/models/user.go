@@ -10,19 +10,19 @@ type BasicUser struct {
 }
 
 type User struct {
-	ID          string `json:"id" binding:"required"`
-	Email       string `json:"email" binding:"required"`
-	Username    string `json:"username" binding:"required"`
-	Password    string `json:"password" binding:"required"`
-	Role        string `json:"role" binding:"required"`
-	Photo       string `json:"photo"`
-	Name        string `json:"name" binding:"required"`
-	Dni         string `json:"dni"`
-	Birthday    string `json:"birthday"`
-	Phone       uint32 `json:"phone"`
-	Description string `json:"description"`
-	// Events      []Event `json:event`
-	// Recipes			[]Recipe	`json:"recipe"`
+	ID          string   `json:"id" binding:"required"`
+	Email       string   `json:"email" binding:"required"`
+	Username    string   `json:"username" binding:"required"`
+	Password    string   `json:"password" binding:"required"`
+	Role        string   `json:"role" binding:"required"`
+	Photo       string   `json:"photo"`
+	Name        string   `json:"name" binding:"required"`
+	Dni         string   `json:"dni"`
+	Birthday    string   `json:"birthday"`
+	Phone       uint32   `json:"phone"`
+	Description string   `json:"description"`
+	Events      []Event  `json:"events"`
+	Recipes     []Recipe `json:"recipes"`
 
 	// Nutricionist
 	IsVerified  bool        `json:"isVerified"`

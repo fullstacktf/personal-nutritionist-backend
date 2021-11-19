@@ -16,7 +16,7 @@ func GetEvents(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, events)
 }
 
-func GetEventbyID(c *gin.Context) {
+func GetEventByID(c *gin.Context) {
 	id := c.Param("idEvent")
 
 	for _, event := range events {
@@ -25,7 +25,7 @@ func GetEventbyID(c *gin.Context) {
 			return
 		}
 	}
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found 💣"})
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "event not found 💣"})
 }
 
 func PostEvent(c *gin.Context) {

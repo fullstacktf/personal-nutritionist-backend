@@ -9,7 +9,7 @@ func StartEvents(router *gin.Engine) {
 	events := router.Group("/api/users/:id/calendar")
 	{
 		events.GET("/", handlers.GetEvents)
-		events.GET("/event/:idEvent", handlers.GetEventbyID)
+		events.GET("/event/:idEvent", handlers.GetEventByID)
 		events.POST("/event", handlers.PostEvent)
 		events.PUT("/event/:idEvent", handlers.PutEvent)
 		events.DELETE("/event/:idEvent", handlers.DeleteEvent)

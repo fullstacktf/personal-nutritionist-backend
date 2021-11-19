@@ -17,7 +17,7 @@ func GetUsers(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, users)
 }
 
-func GetUserbyID(c *gin.Context) {
+func GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 
 	for _, user := range users {
