@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/fullstacktf/personal-nutritionist-backend/api/routes"
@@ -24,4 +25,5 @@ func main() {
 		c.AbortWithStatus(http.StatusNotFound)
 	})
 	router.Run(":8080")
+	fmt.Println("Funciono")
 }
