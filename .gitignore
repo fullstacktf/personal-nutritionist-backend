@@ -1,5 +1,5 @@
+database/
+mongodb/
 *.out
 *.test
 .env
-nutriguide_mongodb/
-src/database/

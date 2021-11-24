@@ -3,12 +3,13 @@ services:
   db:
     image: mongo
     container_name: "mongodb"
-    environment:
-      - MONGO_INITDB_DATABASE=process.env.MONGO_DATABASE
-      # - MONGO_INITDB_ROOT_USERNAME=process.env.MONGO_USERNAME
-      # - MONGO_INITDB_ROOT_PASSWORD=process.env.MONGO_PASSWORD
+    env_file: .env
+    environment: 
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "27017:27017"
     volumes:
-      # - "./init:/docker-entrypoint-initdb.d"
-      - "./nutriguide_mongodb:/data/db"
+      - "./database:/docker-entrypoint-initdb.d"
+      - "./mongodb:/data/db"
