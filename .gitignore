@@ -1,3 +1,5 @@
+database/
+mongodb/
 *.out
 *.test
 .env
