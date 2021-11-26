@@ -7,15 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TODO move to the repository
 var users = []models.User{
 	{ID: "1", Name: "Sergio Peinado", Email: "sergiopeinado@gmail.com", Role: "Nutritionist", Username: "Sergito", Dni: "41257854L", Phone: 612732894, Likes: 157770, IsVerified: true},
 	{ID: "2", Name: "Godhito", Email: "damecomidah@gmail.com", Dni: "87654321P", Username: "Adanito", TypeDiet: "Hypercaloric", Weight: 120, Height: 160, Role: "Client"},
 	{ID: "3", Name: "Sarah Vaughan", Dni: "12345678P", TypeDiet: "vegetarian", Weight: 60, Height: 173, Role: "Client"},
 }
 
-func GetUsers() gin.HandlerFunc {
+func GetUsers(repository models.UserRepository) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		context.IndentedJSON(http.StatusOK, users)
+		context.IndentedJSON(http.StatusOK, repository.GetUsers(context))
 	}
 }
 

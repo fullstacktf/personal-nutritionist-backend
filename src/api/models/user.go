@@ -1,5 +1,7 @@
 package models
 
+import "github.com/gin-gonic/gin"
+
 type BasicUser struct {
 	ID         string `json:"id" binding:"required"`
 	Name       string `json:"name" binding:"required"`
@@ -38,4 +40,8 @@ type User struct {
 	TypeDiet      string      `json:"typeDiet"`
 	Intolerances  []string    `json:"intolerances"`
 	Nutricionists []BasicUser `json:"nutricionists"`
+}
+
+type UserRepository interface {
+	GetUsers(context *gin.Context) []User
 }
