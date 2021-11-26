@@ -48,7 +48,7 @@ func (r *UserRepository) GetUserByID(id primitive.ObjectID) (models.User, error)
 	defer cancel()
 	defer client.Disconnect(ctx)
 
-	result := client.Database("nutriguide").Collection("users").FindOne(ctx, bson.D{{"_id", id}})
+	result := client.Database("nutriguide").Collection("users").FindOne(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
 		return user, errors.New("failed to find an user")
 	}
@@ -77,22 +77,17 @@ func (r *UserRepository) PostUser(user *models.User) (primitive.ObjectID, error)
 }
 
 func (r *UserRepository) PutUser(id primitive.ObjectID, newUser models.User) (models.User, error) {
-	// Buscar la forma de copiar el body json
 	var user models.User
 
 	client, ctx, cancel := database.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 
+	opts := options.FindOneAndUpdate().SetUpsert(false)
+	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.M{"$set": newUser}
-	upsert := true
-	after := options.After
-	opt := options.FindOneAndUpdateOptions{
-		Upsert:         &upsert,
-		ReturnDocument: &after,
-	}
 
-	err := client.Database("nutriguide").Collection("users").FindOneAndUpdate(ctx, bson.M{"_id": id}, update, &opt).Decode(&user)
+	err := client.Database("nutriguide").Collection("users").FindOneAndUpdate(ctx, filter, update, opts).Decode(&user)
 	if err != nil {
 		return user, err
 	}
@@ -107,7 +102,7 @@ func (r *UserRepository) DeleteUser(id primitive.ObjectID) (models.User, error) 
 	defer cancel()
 	defer client.Disconnect(ctx)
 
-	result := client.Database("nutriguide").Collection("users").FindOneAndDelete(ctx, bson.D{{"_id", id}})
+	result := client.Database("nutriguide").Collection("users").FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
 		return user, errors.New("failed to delete an user")
 	}
