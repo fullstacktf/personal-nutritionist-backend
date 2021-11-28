@@ -1,0 +1,22 @@
+name: Deployment
+
+on: [push]
+  # pull_request:
+  #   branches:
+  #     - main
+
+jobs:
+  ssh_deployment:
+    name: SSH connection to our droplet
+    runs-on: ubuntu-latest
+    steps:
+      uses: appleboy/ssh-action@master
+      name: SSH connection and executing commands using password
+      with:
+        host: ${{ secrets.DROPLET_HOST }}
+        username: ${{ secrets.DROPLET_USER }}
+        password: ${{ secrets.DROPLET_PASSWORD }}
+        script: whoami
+
+
+
