@@ -16,7 +16,6 @@ jobs:
       with:
         host: ${{ secrets.DROPLET_HOST }}
         username: ${{ secrets.DROPLET_USER }}
-        password: ${{ secrets.DROPLET_PASSWORD }}
         key: ${{ secrets.DROPLET_KEY }}
         script: ls
 
