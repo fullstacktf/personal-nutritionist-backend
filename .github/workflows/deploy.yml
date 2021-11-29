@@ -15,4 +15,4 @@ jobs:
       with:
         token: ${{ secrets.DIGITALOCEAN_TOKEN }}
     - name: Try command
-      run: doctl compute droplet get droplet_it --output json
+      run: doctl compute droplet get nutriguide --output json
