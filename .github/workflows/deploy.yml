@@ -10,9 +10,10 @@ jobs:
   digital_ocean_deployment:
     runs-on: ubuntu-latest
     steps:
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
+    - name: SSH
+      uses: appleboy/ssh-action@master
       with:
-        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-    - name: Try command
-      run: doctl compute droplet get debian-nutriguide --output json
+        host: ${{ secrets.DROPLET_HOST }}
+        username: ${{secrets.DROPLET_USER}}
+        key: ${{ secrets.DIGITALOCEAN_TOKEN }}
+        script: ls
