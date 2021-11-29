@@ -11,5 +11,5 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - "./database:/docker-entrypoint-initdb.d"
+      - "./database_init:/docker-entrypoint-initdb.d"
       - "./mongodb:/data/db"

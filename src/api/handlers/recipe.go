@@ -12,6 +12,12 @@ var recipes = []models.Recipe{
 	{ID: "2", Name: "Papas rellenas", TypeMeal: "Almuerzo", Alergens: []string{"Carne de cerdo", "Carne de vaca"}, Date: "12-12-2021", Ingredients: []string{"Papas", "Carne", "Mojo"}},
 }
 
+// func GetRecipes(repository repositories.GetRecipes) gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+
+// 	}
+// }
+
 func GetRecipes(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, recipes)
 }
