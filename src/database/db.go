@@ -14,10 +14,8 @@ import (
 
 const connectTimeout = 5
 
-func GetConnection() (*mongo.Client, context.Context, context.CancelFunc) {
-
+func getConnectionURI() string {
 	err := godotenv.Load("../.env")
-
 	if err != nil {
 		log.Fatal("Error loading .env file 💣")
 	}
@@ -26,20 +24,20 @@ func GetConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 	password := os.Getenv("MONGO_PASSWORD")
 	database := os.Getenv("MONGO_DATABASE")
 
-	connectionURI := "mongodb://" + username + ":" + password + "@localhost/27017/" + database + "?authSource=admin"
+	return "mongodb://" + username + ":" + password + "@localhost/27017/" + database + "?authSource=admin"
+}
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(connectionURI))
+func InitConnection() (*mongo.Client, context.Context, context.CancelFunc) {
+	client, err := mongo.NewClient(options.Client().ApplyURI(getConnectionURI()))
 	if err != nil {
 		log.Printf("Failed to create client 💣: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
-
 	err = client.Connect(ctx)
 	if err != nil {
 		log.Printf("Failed to connect to database 💣: %v", err)
 	}
-
 	err = client.Ping(ctx, nil)
 	if err != nil {
 		log.Printf("Failed to ping to database 💣: %v", err)
@@ -47,4 +45,16 @@ func GetConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 
 	fmt.Println("Connected to MongoDB! 😊🍃")
 	return client, ctx, cancel
+}
+
+func GetCollection(collectionName string) (*mongo.Client, context.Context, context.CancelFunc, *mongo.Collection) {
+	client, ctx, cancel := InitConnection()
+
+	collection := client.Database("nutriguide").Collection(collectionName)
+	return client, ctx, cancel, collection
+}
+
+func DropConnection(client *mongo.Client, ctx context.Context, cancel context.CancelFunc) {
+	cancel()
+	client.Disconnect(ctx)
 }

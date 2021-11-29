@@ -1,5 +1,0 @@
-package repositories
-
-func GetRecipes() {
-
-}

@@ -4,14 +4,13 @@ import (
 	"net/http"
 
 	"github.com/fullstacktf/personal-nutritionist-backend/api/models"
-	"github.com/fullstacktf/personal-nutritionist-backend/api/repositories"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetUsers(repository repositories.UserRepository) gin.HandlerFunc {
+func GetUsers(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		users, err := repository.GetUsers()
+		users, err := repository.GetUsers(c)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
@@ -20,11 +19,11 @@ func GetUsers(repository repositories.UserRepository) gin.HandlerFunc {
 	}
 }
 
-func GetUserByID(repository repositories.UserRepository) gin.HandlerFunc {
+func GetUserByID(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, _ := primitive.ObjectIDFromHex(c.Param("id"))
 
-		user, err := repository.GetUserByID(id)
+		user, err := repository.GetUserByID(c, id)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
@@ -33,14 +32,14 @@ func GetUserByID(repository repositories.UserRepository) gin.HandlerFunc {
 	}
 }
 
-func PostUser(repository repositories.UserRepository) gin.HandlerFunc {
+func PostUser(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 		if err := c.BindJSON(&user); err != nil {
 			return
 		}
 
-		objectId, err := repository.PostUser(&user)
+		objectId, err := repository.PostUser(c, &user)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
@@ -49,7 +48,7 @@ func PostUser(repository repositories.UserRepository) gin.HandlerFunc {
 	}
 }
 
-func PutUser(repository repositories.UserRepository) gin.HandlerFunc {
+func PutUser(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, _ := primitive.ObjectIDFromHex(c.Param("id"))
 		var newUser models.User
@@ -57,7 +56,7 @@ func PutUser(repository repositories.UserRepository) gin.HandlerFunc {
 			return
 		}
 
-		user, err := repository.PutUser(id, newUser)
+		user, err := repository.PutUser(c, id, newUser)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
@@ -66,11 +65,11 @@ func PutUser(repository repositories.UserRepository) gin.HandlerFunc {
 	}
 }
 
-func DeleteUser(repository repositories.UserRepository) gin.HandlerFunc {
+func DeleteUser(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, _ := primitive.ObjectIDFromHex(c.Param("id"))
 
-		user, err := repository.DeleteUser(id)
+		user, err := repository.DeleteUser(c, id)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
