@@ -16,4 +16,4 @@ jobs:
         host: ${{ secrets.DROPLET_HOST }}
         username: ${{ secrets.DROPLET_ELENA }}
         key: ${{ secrets.DROPLET_ELENA_KEY }}
-        script: ls -a
+        script: ls
