@@ -85,7 +85,7 @@ func (r *UserRepository) PutUser(c *gin.Context, id primitive.ObjectID, newUser 
 		return user, err
 	}
 
-	return user, nil
+	return newUser, nil
 }
 
 func (r *UserRepository) DeleteUser(c *gin.Context, id primitive.ObjectID) (models.User, error) {

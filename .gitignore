@@ -1,4 +1,4 @@
-database_init/
+src/database/init/
 mongodb/
 *.out
 *.test
