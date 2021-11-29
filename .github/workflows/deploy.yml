@@ -10,10 +10,10 @@ jobs:
   digital_ocean_deployment:
     runs-on: ubuntu-latest
     steps:
-    - name: SSH
+    - name: SSH connection
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DROPLET_HOST }}
         username: ${{ secrets.DROPLET_ELENA }}
         key: ${{ secrets.DROPLET_ELENA_KEY }}
-        script: ls
+        script: ls -a
