@@ -6,18 +6,12 @@ on: [push]
   #     - main
 
 jobs:
-  ssh_deployment:
-    name: SSH connection to our droplet
-    runs-on: ubuntu-latest
+
+  digital_ocean_deployment:
     steps:
-    - uses: actions/checkout@master
-    - name: SSH connection and executing commands using password
-      uses: appleboy/ssh-action@master
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
       with:
-        host: ${{ secrets.DROPLET_HOST }}
-        username: ${{ secrets.DROPLET_USER }}
-        key: ${{ secrets.DROPLET_KEY }}
-        script: ls
-
-
-
+        token: ${{ DIGITALOCEAN_TOKEN }}
+    - name: Try command
+      run: doctl compute droplet get droplet_it --output json
