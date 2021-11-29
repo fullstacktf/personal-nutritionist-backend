@@ -8,6 +8,7 @@ on: [push]
 jobs:
 
   digital_ocean_deployment:
+    runs-on: ubuntu-latest
     steps:
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
