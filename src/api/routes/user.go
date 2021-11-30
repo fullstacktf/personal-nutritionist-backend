@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/fullstacktf/personal-nutritionist-backend/api/handlers"
-	"github.com/fullstacktf/personal-nutritionist-backend/api/repositories"
+	repositories "github.com/fullstacktf/personal-nutritionist-backend/api/repositories/user"
 	"github.com/gin-gonic/gin"
 )
 

@@ -10,7 +10,7 @@ build:
 
 test:
 	@echo "👁‍🗨 Testing Project..."
-	@cd src && go test ./...
+	@cd src && go test ./... -cover
 
 up:
 	@echo "🍃🔓 Starting mongo database..."
