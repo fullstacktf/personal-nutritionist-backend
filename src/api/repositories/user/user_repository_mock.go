@@ -13,7 +13,7 @@ type UserRepositoryMock struct {
 
 func (m *UserRepositoryMock) GetUsers(c *gin.Context) ([]models.User, error) {
 	args := m.Called(c)
-	return args.Get(0).([]models.User), nil
+	return args.Get(0).([]models.User), args.Error(1)
 }
 
 func (m *UserRepositoryMock) GetUserByID(c *gin.Context, id primitive.ObjectID) (models.User, error) {
