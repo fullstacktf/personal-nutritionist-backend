@@ -17,19 +17,21 @@ func (m *UserRepositoryMock) GetUsers(c *gin.Context) ([]models.User, error) {
 }
 
 func (m *UserRepositoryMock) GetUserByID(c *gin.Context, id primitive.ObjectID) (models.User, error) {
-	var user models.User
-	return user, nil
+	args := m.Called(c, id)
+	return args.Get(0).(models.User), args.Error(1)
 }
 
 func (m *UserRepositoryMock) PostUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
-	return primitive.NewObjectID(), nil
+	args := m.Called(c, user)
+	return args.Get(0).(primitive.ObjectID), args.Error(1)
 }
 
 func (m *UserRepositoryMock) PutUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
-	return newUser, nil
+	args := m.Called(c, id, newUser)
+	return args.Get(0).(models.User), args.Error(1)
 }
 
 func (m *UserRepositoryMock) DeleteUser(c *gin.Context, id primitive.ObjectID) (models.User, error) {
-	var user models.User
-	return user, nil
+	args := m.Called(c, id)
+	return args.Get(0).(models.User), args.Error(1)
 }
