@@ -42,7 +42,7 @@ type User struct {
 	Height        uint        `json:"height" bson:"height"`
 	TypeDiet      string      `json:"typeDiet" bson:"typeDiet"`
 	Intolerances  []string    `json:"intolerances" bson:"intolerances"`
-	Nutricionists []BasicUser `json:"nutricionists" bson:"nutricionists"`
+	Nutritionists []BasicUser `json:"nutritionists" bson:"nutritionists"`
 }
 
 type UserRepository interface {

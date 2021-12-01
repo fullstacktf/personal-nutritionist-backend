@@ -2,6 +2,7 @@ package routes
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,11 +12,10 @@ import (
 	repositories "github.com/fullstacktf/personal-nutritionist-backend/api/repositories/user"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
-
-var userRepositoryMock *repositories.UserRepositoryMock
 
 var usersMock = []models.User{
 	{ObjectID: primitive.NewObjectID(), Name: "Sergio Peinado", Email: "sergiopeinado@gmail.com", Role: "Nutritionist", Username: "Sergito", Dni: "41257854L", Phone: 612732894, Likes: 157770, IsVerified: true, Password: "1234"},
@@ -24,12 +24,12 @@ var usersMock = []models.User{
 }
 
 func TestGetUsers(t *testing.T) {
-	t.Run("should return status OK", func(t *testing.T) {
-		assert := assert.New(t)
-		gin.SetMode(gin.TestMode)
-		c := gin.New()
+	gin.SetMode(gin.TestMode)
+	userRepositoryMock := new(repositories.UserRepositoryMock)
 
-		userRepositoryMock.On("GetUsers", c).Return(usersMock, nil)
+	t.Run("should return status OK", func(t *testing.T) {
+		c := gin.New()
+		userRepositoryMock.On("GetUsers", mock.AnythingOfType("*gin.Context")).Return(usersMock, nil)
 		c.GET("/api/users/", handlers.GetUsers(userRepositoryMock))
 
 		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
@@ -37,30 +37,28 @@ func TestGetUsers(t *testing.T) {
 
 		rec := httptest.NewRecorder()
 		c.ServeHTTP(rec, req)
-
 		res := rec.Result()
 		defer res.Body.Close()
 
-		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
 	})
 
-	// t.Run("should return users", func(t *testing.T) {
-	// 	gin.SetMode(gin.TestMode)
-	// 	c := gin.New()
+	t.Run("should return users", func(t *testing.T) {
+		c := gin.New()
+		userRepositoryMock.On("GetUsers", mock.AnythingOfType("*gin.Context")).Return(usersMock, nil)
+		c.GET("/api/users/", handlers.GetUsers(userRepositoryMock))
 
-	// 	userRepositoryMock.On("GetUsers", c).Return(usersMock, nil)
-	// 	c.GET("/api/users/", handlers.GetUsers(userRepositoryMock))
+		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
+		require.NoError(t, err)
 
-	// 	req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
-	// 	require.NoError(t, err)
+		rec := httptest.NewRecorder()
+		c.ServeHTTP(rec, req)
+		res := rec.Result()
+		defer res.Body.Close()
 
-	// 	rec := httptest.NewRecorder()
-	// 	c.ServeHTTP(rec, req)
+		resBody, err := json.MarshalIndent(usersMock, "", "    ")
+		require.NoError(t, err)
 
-	// 	res := rec.Result()
-	// 	defer res.Body.Close()
-	// 	// log.Println("-----------------------------", res.Body)
-
-	// 	assert.Equal(t, "-", res.Body)
-	// })
+		assert.Equal(t, resBody, rec.Body.Bytes(), "they should be equal 💣")
+	})
 }
