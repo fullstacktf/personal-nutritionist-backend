@@ -4,12 +4,12 @@ services:
     image: mongo
     container_name: "mongodb"
     env_file: .env
-    environment: 
+    environment:
       MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "27017:27017"
     volumes:
-      - "./database:/docker-entrypoint-initdb.d"
+      - "./src/database/init:/docker-entrypoint-initdb.d"
       - "./mongodb:/data/db"
