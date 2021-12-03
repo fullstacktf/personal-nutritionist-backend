@@ -23,8 +23,10 @@ func getConnectionURI() string {
 	username := os.Getenv("MONGO_USERNAME")
 	password := os.Getenv("MONGO_PASSWORD")
 	database := os.Getenv("MONGO_DATABASE")
+	url := os.Getenv("MONGO_URL")
+	port := os.Getenv("MONGO_PORT")
 
-	return "mongodb://" + username + ":" + password + "@localhost/27017/" + database + "?authSource=admin"
+	return "mongodb://" + username + ":" + password + "@" + url + "/" + port + "/" + database + "?authSource=admin"
 }
 
 func InitConnection() (*mongo.Client, context.Context, context.CancelFunc) {
