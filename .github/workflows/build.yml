@@ -22,4 +22,4 @@ jobs:
         with:
           webhook_id: ${{ secrets.DISCORD_CHANNEL_ID }}
           webhook_token: ${{ secrets.DISCORD_BACK }}
-          args: ${{ github.event_name }}
+          message: ${{ github.event_name }}
