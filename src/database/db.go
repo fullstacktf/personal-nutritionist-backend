@@ -3,10 +3,9 @@ package database
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
-	"github.com/joho/godotenv"
+	"github.com/fullstacktf/personal-nutritionist-backend/env"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -14,32 +13,24 @@ import (
 const connectTimeout = 5
 
 func getConnectionURI() string {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file 💣")
-	}
-
-	username := os.Getenv("MONGO_USERNAME")
-	password := os.Getenv("MONGO_PASSWORD")
-	database := os.Getenv("MONGO_DATABASE")
-
-	return "mongodb://" + username + ":" + password + "@localhost/27017/" + database + "?authSource=admin"
+	env.LoadEnv()
+	return "mongodb://" + env.MONGO_USERNAME + ":" + env.MONGO_PASSWORD + "@" + env.MONGO_URL + "/" + env.MONGO_PORT + "/" + env.MONGO_DATABASE + "?authSource=admin"
 }
 
 func InitConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 	client, err := mongo.NewClient(options.Client().ApplyURI(getConnectionURI()))
 	if err != nil {
-		log.Panicf("Failed to create client 💣: %v", err)
+		log.Fatalln("Failed to create client 💣:", err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
 	err = client.Connect(ctx)
 	if err != nil {
-		log.Panicf("Failed to connect to database 💣: %v", err)
+		log.Fatalln("Failed to connect to database 💣:", err)
 	}
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Panicf("Failed to ping to database 💣: %v", err)
+		log.Fatalln("Failed to ping to database 💣:", err)
 	}
 
 	// log.Println("----------", client.Database("nutriguide"))
