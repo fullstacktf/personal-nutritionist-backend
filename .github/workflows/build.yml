@@ -20,6 +20,6 @@ jobs:
       - name: send custom message with args
         uses: appleboy/discord-action@master
         with:
-          webhook_id: ${{ secret.DISCORD_CHANNEL_ID }}
+          webhook_id: ${{ secrets.DISCORD_CHANNEL_ID }}
           webhook_token: ${{ secrets.DISCORD_BACK }}
           args: ${{ github.event_name }}
