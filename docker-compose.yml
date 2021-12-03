@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   db:
-    image: mongo
+    image: mongo:4.4.6
     container_name: "mongodb"
     env_file: .env
     environment:
@@ -11,14 +11,12 @@ services:
     ports:
       - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
-      - "./src/database/init:/docker-entrypoint-initdb.d"
       - "./mongodb:/data/db"
     networks:
       - nutriguide
 
   backend:
-    image: "pruebita"
-    build: .
+    image: nutriguide-backend
     container_name: "nutriguide"
     depends_on:
       - db

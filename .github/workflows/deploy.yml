@@ -13,7 +13,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v2
       - name: Build image
-        run: docker build -t sample/my-page .
+        run: docker build -t nutriguide-backend .
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -25,7 +25,7 @@ jobs:
           docker tag sample/my-page \
           registry.digitalocean.com/my-sample-registry/my-sample-page:${{github.event.inputs.version }}
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/my-sample-registry/my-sample-page:${{ github.event.inputs.version }}
+        run: docker push nutriguide-backend:${{ github.event.inputs.version }}
 
   run_new_app_containers:
     runs-on: ubuntu-latest
