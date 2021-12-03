@@ -24,6 +24,8 @@ var usersMock = []models.User{
 	{ObjectID: primitive.NewObjectID(), Name: "Sarah Vaughan", Dni: "12345678P", TypeDiet: "vegetarian", Weight: 60, Height: 173, Role: "Client", Password: "1234"},
 }
 
+var userMock = models.User{ObjectID: primitive.NewObjectID(), Name: "Sergio Peinado", Email: "sergiopeinado@gmail.com", Role: "Nutritionist", Username: "Sergito", Dni: "41257854L", Phone: 612732894, Likes: 157770, IsVerified: true, Password: "1234"}
+
 type ErrorMock struct {
 	Message string `json:"message"`
 	Status  string `json:"status"`
@@ -60,7 +62,7 @@ func TestGetUsers(t *testing.T) {
 		userRepositoryMock := new(repositories.UserRepositoryMock)
 		c := gin.New()
 
-		userRepositoryMock.On("GetUsers", mock.AnythingOfType("*gin.Context")).Return(usersMock, errors.New("error de prueba"))
+		userRepositoryMock.On("GetUsers", mock.AnythingOfType("*gin.Context")).Return([]models.User{}, errors.New("error de prueba"))
 		c.GET("/api/users/", handlers.GetUsers(userRepositoryMock))
 
 		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
@@ -108,7 +110,7 @@ func TestGetUserByID(t *testing.T) {
 		userRepositoryMock := new(repositories.UserRepositoryMock)
 		c := gin.New()
 
-		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(usersMock[0], errors.New("error de prueba"))
+		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(models.User{}, errors.New("error de prueba"))
 		c.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
 
 		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
@@ -128,99 +130,99 @@ func TestGetUserByID(t *testing.T) {
 }
 
 func TestPostUser(t *testing.T) {
-	// t.Run("should return status OK and user", func(t *testing.T) {
-	// 	gin.SetMode(gin.TestMode)
-	// 	userRepositoryMock := new(repositories.UserRepositoryMock)
-	// 	c := gin.New()
+	t.Run("should return status OK and user", func(t *testing.T) {
+		gin.SetMode(gin.TestMode)
+		userRepositoryMock := new(repositories.UserRepositoryMock)
+		c := gin.New()
 
-	// 	userRepositoryMock.On("PostUser", mock.AnythingOfType("*gin.Context"), usersMock[0]).Return(usersMock[0].ObjectID, nil)
-	// 	c.POST("/api/users/", handlers.PostUser(userRepositoryMock))
+		userRepositoryMock.On("PostUser", mock.AnythingOfType("*gin.Context"), userMock).Return(usersMock[0].ObjectID, nil)
+		c.POST("/api/users/", handlers.PostUser(userRepositoryMock))
 
-	// 	// reqBody, _ := json.Marshal(usersMock[0])
-	// 	// req, err := http.NewRequest(http.MethodPost, "/api/users/", bytes.NewBuffer(reqBody))
-	// 	req, err := http.NewRequest(http.MethodPost, "/api/users/", bytes.NewBufferString(""))
-	// 	req.Header.Set("Content-Type", "application/json")
-	// 	require.NoError(t, err)
+		reqBody, _ := json.Marshal(userMock)
+		req, err := http.NewRequest(http.MethodPost, "/api/users/", bytes.NewBuffer(reqBody))
 
-	// 	rec := httptest.NewRecorder()
-	// 	c.ServeHTTP(rec, req)
-	// 	res := rec.Result()
-	// 	defer res.Body.Close()
+		req.Header.Set("Content-Type", "application/json")
+		require.NoError(t, err)
 
-	// 	assert.Equal(t, http.StatusCreated, res.StatusCode, "they should be equal 💣")
-	// 	assert.Equal(t, usersMock[0].ObjectID.Hex(), rec.Body.String(), "they should be equal 💣")
-	// })
+		rec := httptest.NewRecorder()
+		c.ServeHTTP(rec, req)
+		res := rec.Result()
+		defer res.Body.Close()
 
-	// t.Run("should return error status and error message", func(t *testing.T) {
-	// 	gin.SetMode(gin.TestMode)
-	// 	userRepositoryMock := new(repositories.UserRepositoryMock)
-	// 	c := gin.New()
+		assert.Equal(t, http.StatusCreated, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, usersMock[0].ObjectID.Hex(), rec.Body.String(), "they should be equal 💣")
+	})
 
-	// 	userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(usersMock[0], errors.New("error de prueba"))
-	// 	c.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
+	t.Run("should return error status and error message", func(t *testing.T) {
+		gin.SetMode(gin.TestMode)
+		userRepositoryMock := new(repositories.UserRepositoryMock)
+		c := gin.New()
 
-	// 	req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
-	// 	require.NoError(t, err)
+		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(models.User{}, errors.New("error de prueba"))
+		c.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
 
-	// 	rec := httptest.NewRecorder()
-	// 	c.ServeHTTP(rec, req)
-	// 	res := rec.Result()
-	// 	defer res.Body.Close()
+		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
+		require.NoError(t, err)
 
-	// 	formerBody, err := json.MarshalIndent(errorMock, "", "    ")
-	// 	require.NoError(t, err)
+		rec := httptest.NewRecorder()
+		c.ServeHTTP(rec, req)
+		res := rec.Result()
+		defer res.Body.Close()
 
-	// 	assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
-	// 	assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
-	// })
+		formerBody, err := json.MarshalIndent(errorMock, "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
 }
 
 func TestPutUser(t *testing.T) {
-	// t.Run("should return status OK and user", func(t *testing.T) {
-	// 	gin.SetMode(gin.TestMode)
-	// 	userRepositoryMock := new(repositories.UserRepositoryMock)
-	// 	c := gin.New()
+	t.Run("should return status OK and user", func(t *testing.T) {
+		gin.SetMode(gin.TestMode)
+		userRepositoryMock := new(repositories.UserRepositoryMock)
+		c := gin.New()
 
-	// 	userRepositoryMock.On("PutUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, usersMock[0]).Return(usersMock[0], nil)
-	// 	c.PUT("/api/users/", handlers.PutUser(userRepositoryMock))
+		userRepositoryMock.On("PutUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, usersMock[0]).Return(usersMock[0], nil)
+		c.PUT("/api/users/", handlers.PutUser(userRepositoryMock))
 
-	// 	req, err := http.NewRequest(http.MethodPut, "/api/users/", bytes.NewBufferString(""))
-	// 	require.NoError(t, err)
+		req, err := http.NewRequest(http.MethodPut, "/api/users/", bytes.NewBufferString(""))
+		require.NoError(t, err)
 
-	// 	rec := httptest.NewRecorder()
-	// 	c.ServeHTTP(rec, req)
-	// 	res := rec.Result()
-	// 	defer res.Body.Close()
+		rec := httptest.NewRecorder()
+		c.ServeHTTP(rec, req)
+		res := rec.Result()
+		defer res.Body.Close()
 
-	// 	formerBody, err := json.MarshalIndent(usersMock[0], "", "    ")
-	// 	require.NoError(t, err)
+		formerBody, err := json.MarshalIndent(usersMock[0], "", "    ")
+		require.NoError(t, err)
 
-	// 	assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
-	// 	assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
-	// })
+		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
 
-	// t.Run("should return error status and error message", func(t *testing.T) {
-	// 	gin.SetMode(gin.TestMode)
-	// 	userRepositoryMock := new(repositories.UserRepositoryMock)
-	// 	c := gin.New()
+	t.Run("should return error status and error message", func(t *testing.T) {
+		gin.SetMode(gin.TestMode)
+		userRepositoryMock := new(repositories.UserRepositoryMock)
+		c := gin.New()
 
-	// 	userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(usersMock[0], errors.New("error de prueba"))
-	// 	c.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
+		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(models.User{}, errors.New("error de prueba"))
+		c.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
 
-	// 	req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
-	// 	require.NoError(t, err)
+		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
+		require.NoError(t, err)
 
-	// 	rec := httptest.NewRecorder()
-	// 	c.ServeHTTP(rec, req)
-	// 	res := rec.Result()
-	// 	defer res.Body.Close()
+		rec := httptest.NewRecorder()
+		c.ServeHTTP(rec, req)
+		res := rec.Result()
+		defer res.Body.Close()
 
-	// 	formerBody, err := json.MarshalIndent(errorMock, "", "    ")
-	// 	require.NoError(t, err)
+		formerBody, err := json.MarshalIndent(errorMock, "", "    ")
+		require.NoError(t, err)
 
-	// 	assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
-	// 	assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
-	// })
+		assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
 }
 
 func TestDeleteUser(t *testing.T) {
@@ -252,7 +254,7 @@ func TestDeleteUser(t *testing.T) {
 		userRepositoryMock := new(repositories.UserRepositoryMock)
 		c := gin.New()
 
-		userRepositoryMock.On("DeleteUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(usersMock[0], errors.New("error de prueba"))
+		userRepositoryMock.On("DeleteUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(models.User{}, errors.New("error de prueba"))
 		c.DELETE("/api/users/", handlers.DeleteUser(userRepositoryMock))
 
 		req, err := http.NewRequest(http.MethodDelete, "/api/users/", bytes.NewBufferString(""))

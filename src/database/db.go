@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -30,20 +29,21 @@ func getConnectionURI() string {
 func InitConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 	client, err := mongo.NewClient(options.Client().ApplyURI(getConnectionURI()))
 	if err != nil {
-		log.Printf("Failed to create client 💣: %v", err)
+		log.Panicf("Failed to create client 💣: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
 	err = client.Connect(ctx)
 	if err != nil {
-		log.Printf("Failed to connect to database 💣: %v", err)
+		log.Panicf("Failed to connect to database 💣: %v", err)
 	}
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Printf("Failed to ping to database 💣: %v", err)
+		log.Panicf("Failed to ping to database 💣: %v", err)
 	}
 
-	fmt.Println("Connected to MongoDB! 😊🍃")
+	// log.Println("----------", client.Database("nutriguide"))
+	log.Println("Connected to MongoDB! 😊🍃")
 	return client, ctx, cancel
 }
 

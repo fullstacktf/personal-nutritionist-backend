@@ -3,10 +3,12 @@ package routes
 import (
 	"github.com/fullstacktf/personal-nutritionist-backend/api/handlers"
 	repositories "github.com/fullstacktf/personal-nutritionist-backend/api/repositories/user"
+	"github.com/fullstacktf/personal-nutritionist-backend/database"
 	"github.com/gin-gonic/gin"
 )
 
 func StartUsers(router *gin.Engine) {
+	database.InitConnection()
 	userRepository := repositories.NewUserRepository(nil)
 
 	users := router.Group("/api/users")
