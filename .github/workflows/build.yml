@@ -1,4 +1,4 @@
-name: Deployment
+name: CI
 
 on: [push]
 
@@ -12,3 +12,14 @@ jobs:
         uses: actions/checkout@v2
       - name: Run test
         run: make test
+  discord-message:
+    name: Discord notification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: send custom message with args
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secret.DISCORD_CHANNEL_ID }}
+          webhook_token: ${{ secrets.DISCORD_BACK }}
+          args: ${{ github.event_name }}
