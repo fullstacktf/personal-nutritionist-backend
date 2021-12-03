@@ -15,9 +15,12 @@ import (
 const connectTimeout = 5
 
 func getConnectionURI() string {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file 💣")
+	environment := os.Getenv("ENV")
+	if environment == "local" {
+		err := godotenv.Load("../.env")
+		if err != nil {
+			log.Fatal("Error loading .env file 💣")
+		}
 	}
 
 	username := os.Getenv("MONGO_USERNAME")
