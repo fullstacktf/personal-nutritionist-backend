@@ -42,6 +42,6 @@ jobs:
         host: ${{ secrets.DROPLET_HOST }}
         username: ${{ secrets.DROPLET_ElENA }}
         key: ${{ secrets.DROPLET_ELENA_KEY }}
-        scripts: |
+        script: |
           doctl registry login -t ${{ secrets.DIGITALOCEAN_TOKEN }}
           docker pull ${{ secrets.DOCKER_IMAGE_REGISTRY }}:latest
