@@ -26,10 +26,12 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       - name: Tag image
         run:
-          docker tag registry.digitalocean.com/nutriguide/nutriguide-backend \
-          registry.digitalocean.com/nutriguide/nutriguide-backend:${{ github.event.inputs.version }}
+        docker tag nutriguide-backend registry.digitalocean.com/nutriguide/nutriguide-backend
+          # docker tag registry.digitalocean.com/nutriguide/nutriguide-backend \
+          # registry.digitalocean.com/nutriguide/nutriguide-backend:${{ github.event.inputs.version }}
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/nutriguide/nutriguide-backend:${{ github.event.inputs.version }}
+        # run: docker push registry.digitalocean.com/nutriguide/nutriguide-backend:${{ github.event.inputs.version }}
+        run: docker push registry.digitalocean.com/nutriguide/nutriguide-backend
 
   run_new_app_containers:
     runs-on: ubuntu-latest
