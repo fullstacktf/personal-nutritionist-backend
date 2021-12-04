@@ -34,8 +34,7 @@ jobs:
 
   run_new_app_containers:
     runs-on: ubuntu-latest
-    depends-on:
-      - build_and_push
+    needs: build_and_push
     steps:
     - name: SSH connection
       uses: appleboy/ssh-action@master
