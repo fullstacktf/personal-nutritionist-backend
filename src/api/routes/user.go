@@ -8,8 +8,7 @@ import (
 )
 
 func StartUsers(router *gin.Engine) {
-	database.InitConnection()
-	userRepository := repositories.NewUserRepository(nil)
+	userRepository := repositories.NewUserRepository(database.InitConnection())
 
 	users := router.Group("/api/users")
 	{
