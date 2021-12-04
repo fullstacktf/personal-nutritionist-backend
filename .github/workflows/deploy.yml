@@ -30,7 +30,7 @@ jobs:
           # registry.digitalocean.com/nutriguide/nutriguide-backend:${{ github.event.inputs.version }}
       - name: Push image to DO Container Registry
         # run: docker push registry.digitalocean.com/nutriguide/nutriguide-backend:${{ github.event.inputs.version }}
-        run: docker push registry.digitalocean.com/nutriguide/nutriguide-backend
+        run: docker push ${{ secrets.DOCKER_IMAGE_REGISTRY }}
 
   run_new_app_containers:
     runs-on: ubuntu-latest
@@ -41,4 +41,4 @@ jobs:
         host: ${{ secrets.DROPLET_HOST }}
         username: ${{ secrets.DROPLET_ElENA }}
         key: ${{ secrets.DROPLET_ELENA_KEY }}
-        script:
+        script: docker pull ${{ secrets.DOCKER_IMAGE_REGISTRY }}:latest
