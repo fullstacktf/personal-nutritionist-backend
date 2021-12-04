@@ -12,7 +12,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v2
       - name: Build image
-        run: docker build -t nutriguide-backend .
+        run: docker build . -t nutriguide-backend
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -24,7 +24,7 @@ jobs:
           docker tag nutriguide-backend \
           nutriguide-backend:${{ github.event.inputs.version }}
       - name: Push image to DO Container Registry
-        run: docker push nutriguide-backend:${{ github.event.inputs.version }}
+        run: docker push adanrl/nutriguide-backend:${{ github.event.inputs.version }}
 
   run_new_app_containers:
     runs-on: ubuntu-latest
