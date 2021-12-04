@@ -22,7 +22,7 @@ jobs:
       - name: Tag image
         run:
           docker tag nutriguide-backend \
-          nutriguide-backend:${{ github.event.inputs.version }}
+          registry.digitalocean.com/nutriguide/nutriguide-backend:${{ github.event.inputs.version }}
       - name: Push image to DO Container Registry
         run: docker push adanrl/nutriguide-backend:${{ github.event.inputs.version }}
 
