@@ -37,11 +37,11 @@ jobs:
     needs: build_and_push
     steps:
     - name: SSH connection
-      uses: fifsky/ssh-action@master
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DROPLET_HOST }}
         username: ${{ secrets.DROPLET_ElENA }}
         key: ${{ secrets.DROPLET_ELENA_KEY }}
-        command: |
+        scripts: |
           doctl registry login -t ${{ secrets.DIGITALOCEAN_TOKEN }}
           docker pull ${{ secrets.DOCKER_IMAGE_REGISTRY }}:latest
