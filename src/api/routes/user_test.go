@@ -129,14 +129,14 @@ func TestGetUserByID(t *testing.T) {
 	})
 }
 
-func TestPostUser(t *testing.T) {
+func TestCreateUser(t *testing.T) {
 	// t.Run("should return status OK and user", func(t *testing.T) {
 	// 	gin.SetMode(gin.TestMode)
 	// 	userRepositoryMock := new(repositories.UserRepositoryMock)
 	// 	c := gin.New()
 
 	// 	userRepositoryMock.On("PostUser", mock.AnythingOfType("*gin.Context"), userMock).Return(usersMock[0].ObjectID, nil)
-	// 	c.POST("/api/users/", handlers.PostUser(userRepositoryMock))
+	// 	c.POST("/api/users/", handlers.CreateUser(userRepositoryMock))
 
 	// 	reqBody, _ := json.Marshal(userMock)
 	// 	req, err := http.NewRequest(http.MethodPost, "/api/users/", bytes.NewBuffer([]byte(reqBody)))
@@ -177,14 +177,14 @@ func TestPostUser(t *testing.T) {
 	// })
 }
 
-func TestPutUser(t *testing.T) {
+func TestUpdateUser(t *testing.T) {
 	// t.Run("should return status OK and user", func(t *testing.T) {
 	// 	gin.SetMode(gin.TestMode)
 	// 	userRepositoryMock := new(repositories.UserRepositoryMock)
 	// 	c := gin.New()
 
 	// 	userRepositoryMock.On("PutUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, usersMock[0]).Return(usersMock[0], nil)
-	// 	c.PUT("/api/users/", handlers.PutUser(userRepositoryMock))
+	// 	c.PUT("/api/users/", handlers.UpdateUser(userRepositoryMock))
 
 	// 	req, err := http.NewRequest(http.MethodPut, "/api/users/", bytes.NewBufferString(""))
 	// 	require.NoError(t, err)

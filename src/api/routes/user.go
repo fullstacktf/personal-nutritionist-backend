@@ -14,8 +14,8 @@ func StartUsers(router *gin.Engine) {
 	{
 		users.GET("/", handlers.GetUsers(userRepository))
 		users.GET("/:id", handlers.GetUserByID(userRepository))
-		users.POST("/", handlers.PostUser(userRepository))
-		users.PUT("/:id", handlers.PutUser(userRepository))
+		users.POST("/", handlers.CreateUser(userRepository))
+		users.PUT("/:id", handlers.UpdateUser(userRepository))
 		users.DELETE("/:id", handlers.DeleteUser(userRepository))
 	}
 }

@@ -62,7 +62,7 @@ func (r *UserRepository) GetUserByID(c *gin.Context, id primitive.ObjectID) (mod
 	return user, nil
 }
 
-func (r *UserRepository) PostUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
+func (r *UserRepository) CreateUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
 	user.ObjectID = primitive.NewObjectID()
 
 	ctx, cancel := database.GetContext(r.db.Client())
@@ -78,7 +78,7 @@ func (r *UserRepository) PostUser(c *gin.Context, user *models.User) (primitive.
 	return objectID, nil
 }
 
-func (r *UserRepository) PutUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
+func (r *UserRepository) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
 	opts := options.FindOneAndUpdate().SetUpsert(false)
 	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.M{"$set": newUser}

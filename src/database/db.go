@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const connectTimeout = 5000
+const connectTimeout = 5
 
 func getConnectionURI() string {
 	env.LoadEnv()

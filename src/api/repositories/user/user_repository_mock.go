@@ -21,12 +21,12 @@ func (m *UserRepositoryMock) GetUserByID(c *gin.Context, id primitive.ObjectID) 
 	return args.Get(0).(models.User), args.Error(1)
 }
 
-func (m *UserRepositoryMock) PostUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
+func (m *UserRepositoryMock) CreateUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
 	args := m.Called(c, user)
 	return args.Get(0).(primitive.ObjectID), args.Error(1)
 }
 
-func (m *UserRepositoryMock) PutUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
+func (m *UserRepositoryMock) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
 	args := m.Called(c, id, newUser)
 	return args.Get(0).(models.User), args.Error(1)
 }
