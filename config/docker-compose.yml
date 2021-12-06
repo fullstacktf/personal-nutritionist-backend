@@ -12,17 +12,23 @@ services:
       - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
       - "./mongodb:/data/db"
+      - "./init:/docker-entrypoint-initdb.d"
     networks:
       - nutriguide
 
   backend:
-    image: nutriguide-backend
+    image: registry.digitalocean.com/nutriguide/nutriguide-backend
     container_name: "nutriguide"
     depends_on:
       - db
     environment:
-      MONGO_URL: db
-      ENV: local
+      ENV: prod
+      MONGO_USERNAME: z02Fit0
+      MONGO_PASSWORD: 4pSAD4DkyE7G
+      MONGO_DATABASE: nutriguide
+      MONGO_PORT: 27017
+      MONGO_URL: localhost
+
     ports:
       - "8080:8080"
     networks:
