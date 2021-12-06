@@ -56,7 +56,7 @@ func UpdateUser(repository models.UserRepository) gin.HandlerFunc {
 			return
 		}
 
-		user, err := repository.UpdateUser(c, id, newUser)
+		user, err := repository.UpdateUser(c, id, &newUser)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {

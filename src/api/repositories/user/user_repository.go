@@ -42,7 +42,7 @@ func (r *UserRepository) GetUsers(c *gin.Context) ([]models.User, error) {
 	return users, nil
 }
 
-func (r *UserRepository) GetUserByID(c *gin.Context, id primitive.ObjectID) (models.User, error) {
+func (r *UserRepository) GetUserByID(c *gin.Context, id primitive.ObjectID) (*models.User, error) {
 	var user models.User
 
 	ctx, cancel := database.GetContext(r.db.Client())
@@ -51,15 +51,15 @@ func (r *UserRepository) GetUserByID(c *gin.Context, id primitive.ObjectID) (mod
 	collection := r.db.Collection("users")
 	result := collection.FindOne(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
-		return user, errors.New("failed to find an user")
+		return nil, errors.New("failed to find an user")
 	}
 
 	err := result.Decode(&user)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }
 
 func (r *UserRepository) CreateUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
@@ -78,7 +78,7 @@ func (r *UserRepository) CreateUser(c *gin.Context, user *models.User) (primitiv
 	return objectID, nil
 }
 
-func (r *UserRepository) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
+func (r *UserRepository) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser *models.User) (*models.User, error) {
 	opts := options.FindOneAndUpdate().SetUpsert(false)
 	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.M{"$set": newUser}
@@ -90,13 +90,13 @@ func (r *UserRepository) UpdateUser(c *gin.Context, id primitive.ObjectID, newUs
 	collection := r.db.Collection("users")
 	err := collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 
 	return newUser, nil
 }
 
-func (r *UserRepository) DeleteUser(c *gin.Context, id primitive.ObjectID) (models.User, error) {
+func (r *UserRepository) DeleteUser(c *gin.Context, id primitive.ObjectID) (*models.User, error) {
 	var user models.User
 
 	ctx, cancel := database.GetContext(r.db.Client())
@@ -105,13 +105,13 @@ func (r *UserRepository) DeleteUser(c *gin.Context, id primitive.ObjectID) (mode
 	collection := r.db.Collection("users")
 	result := collection.FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
-		return user, errors.New("failed to delete an user")
+		return nil, errors.New("failed to delete an user")
 	}
 
 	err := result.Decode(&user)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }

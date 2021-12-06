@@ -7,8 +7,8 @@ import (
 
 type UserRepository interface {
 	GetUsers(c *gin.Context) ([]User, error)
-	GetUserByID(c *gin.Context, id primitive.ObjectID) (User, error)
+	GetUserByID(c *gin.Context, id primitive.ObjectID) (*User, error)
 	CreateUser(c *gin.Context, user *User) (primitive.ObjectID, error)
-	UpdateUser(c *gin.Context, id primitive.ObjectID, newUser User) (User, error)
-	DeleteUser(c *gin.Context, id primitive.ObjectID) (User, error)
+	UpdateUser(c *gin.Context, id primitive.ObjectID, newUser *User) (*User, error)
+	DeleteUser(c *gin.Context, id primitive.ObjectID) (*User, error)
 }

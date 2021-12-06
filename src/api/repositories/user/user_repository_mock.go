@@ -16,9 +16,9 @@ func (m *UserRepositoryMock) GetUsers(c *gin.Context) ([]models.User, error) {
 	return args.Get(0).([]models.User), args.Error(1)
 }
 
-func (m *UserRepositoryMock) GetUserByID(c *gin.Context, id primitive.ObjectID) (models.User, error) {
+func (m *UserRepositoryMock) GetUserByID(c *gin.Context, id primitive.ObjectID) (*models.User, error) {
 	args := m.Called(c, id)
-	return args.Get(0).(models.User), args.Error(1)
+	return args.Get(0).(*models.User), args.Error(1)
 }
 
 func (m *UserRepositoryMock) CreateUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
@@ -26,12 +26,12 @@ func (m *UserRepositoryMock) CreateUser(c *gin.Context, user *models.User) (prim
 	return args.Get(0).(primitive.ObjectID), args.Error(1)
 }
 
-func (m *UserRepositoryMock) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
+func (m *UserRepositoryMock) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser *models.User) (*models.User, error) {
 	args := m.Called(c, id, newUser)
-	return args.Get(0).(models.User), args.Error(1)
+	return args.Get(0).(*models.User), args.Error(1)
 }
 
-func (m *UserRepositoryMock) DeleteUser(c *gin.Context, id primitive.ObjectID) (models.User, error) {
+func (m *UserRepositoryMock) DeleteUser(c *gin.Context, id primitive.ObjectID) (*models.User, error) {
 	args := m.Called(c, id)
-	return args.Get(0).(models.User), args.Error(1)
+	return args.Get(0).(*models.User), args.Error(1)
 }
