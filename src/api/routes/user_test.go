@@ -20,7 +20,7 @@ var usersMock = []models.User{
 	{ObjectID: primitive.NewObjectID(), Name: "Sarah Vaughan", Dni: "12345678P", TypeDiet: "vegetarian", Weight: 60, Height: 173, Role: "Client", Password: "1234"},
 }
 
-var userErrorMock = models.Error{Message: "error de usuario", Status: "💣"}
+var userErrorMock = Error{Message: "error de usuario", Status: "💣"}
 
 func TestGetUsers(t *testing.T) {
 	t.Run("should return status OK and users", func(t *testing.T) {

@@ -20,7 +20,7 @@ var eventsMock = []models.Event{
 	{ObjectID: primitive.NewObjectID(), Title: "Reunión con Coromoto", Description: "Terapia trastorno alimenticio", Status: "Confirmado", StartingDate: "12/12/2021 13:00", EndingDate: "12/12/2021 13:55"},
 }
 
-var eventErrorMock = models.Error{Message: "error de evento", Status: "💣"}
+var eventErrorMock = Error{Message: "error de evento", Status: "💣"}
 
 func TestGetEvents(t *testing.T) {
 	t.Run("should return status OK and events", func(t *testing.T) {

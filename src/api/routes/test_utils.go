@@ -12,6 +12,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type Error struct {
+	Message string `json:"message"`
+	Status  string `json:"status"`
+}
+
 var (
 	context             *gin.Engine
 	userRepositoryMock  *userRepositories.UserRepositoryMock
