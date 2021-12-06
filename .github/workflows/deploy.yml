@@ -40,6 +40,9 @@ jobs:
         username: ${{ secrets.DROPLET_ElENA }}
         key: ${{ secrets.DROPLET_ELENA_KEY }}
         script: |
+          cd ../nutriguide-project
+          docker-compose down
+          docker tag ${{ secrets.DOCKER_IMAGE_REGISTRY }}:latest ${{ secrets.DOCKER_IMAGE_REGISTRY }}:old
           doctl registry login -t ${{ secrets.DIGITALOCEAN_TOKEN }}
           docker pull ${{ secrets.DOCKER_IMAGE_REGISTRY }}:latest
-          docker-compose down
+          docker-compose up
