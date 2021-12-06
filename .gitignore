@@ -3,4 +3,3 @@ mongodb/
 *.out
 *.test
 .env
-config/
