@@ -33,23 +33,39 @@ type ErrorMock struct {
 
 var errorMock = ErrorMock{Message: "error de prueba", Status: "💣"}
 
+var (
+	context            *gin.Engine
+	userRepositoryMock *repositories.UserRepositoryMock
+)
+
+func setUp() {
+	gin.SetMode(gin.TestMode)
+	userRepositoryMock = new(repositories.UserRepositoryMock)
+	context = gin.New()
+}
+
+func executeRequest(t *testing.T, method string, handler gin.HandlerFunc, url string, request string) (*http.Response, *httptest.ResponseRecorder) {
+	context.GET(url, handler)
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer([]byte(request)))
+	require.NoError(t, err)
+
+	rec := httptest.NewRecorder()
+	context.ServeHTTP(rec, req)
+
+	res := rec.Result()
+	defer res.Body.Close()
+
+	return res, rec
+}
+
 func TestGetUsers(t *testing.T) {
 	t.Run("should return status OK and users", func(t *testing.T) {
-		gin.SetMode(gin.TestMode)
-		userRepositoryMock := new(repositories.UserRepositoryMock)
-		c := gin.New()
-
+		setUp()
 		userRepositoryMock.On("GetUsers", mock.AnythingOfType("*gin.Context")).Return(usersMock, nil)
-		c.GET("/api/users/", handlers.GetUsers(userRepositoryMock))
+		handlerFunc := handlers.GetUsers(userRepositoryMock)
 
-		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
-		require.NoError(t, err)
-
-		rec := httptest.NewRecorder()
-		c.ServeHTTP(rec, req)
-		res := rec.Result()
-		defer res.Body.Close()
-
+		res, rec := executeRequest(t, http.MethodGet, handlerFunc, "/api/users/", "")
 		formerBody, err := json.MarshalIndent(usersMock, "", "    ")
 		require.NoError(t, err)
 
@@ -58,21 +74,11 @@ func TestGetUsers(t *testing.T) {
 	})
 
 	t.Run("should return error status and error message", func(t *testing.T) {
-		gin.SetMode(gin.TestMode)
-		userRepositoryMock := new(repositories.UserRepositoryMock)
-		c := gin.New()
-
+		setUp()
 		userRepositoryMock.On("GetUsers", mock.AnythingOfType("*gin.Context")).Return([]models.User{}, errors.New("error de prueba"))
-		c.GET("/api/users/", handlers.GetUsers(userRepositoryMock))
+		handlerFunc := handlers.GetUsers(userRepositoryMock)
 
-		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
-		require.NoError(t, err)
-
-		rec := httptest.NewRecorder()
-		c.ServeHTTP(rec, req)
-		res := rec.Result()
-		defer res.Body.Close()
-
+		res, rec := executeRequest(t, http.MethodGet, handlerFunc, "/api/users/", "")
 		formerBody, err := json.MarshalIndent(errorMock, "", "    ")
 		require.NoError(t, err)
 
@@ -83,21 +89,11 @@ func TestGetUsers(t *testing.T) {
 
 func TestGetUserByID(t *testing.T) {
 	t.Run("should return status OK and user", func(t *testing.T) {
-		gin.SetMode(gin.TestMode)
-		userRepositoryMock := new(repositories.UserRepositoryMock)
-		c := gin.New()
-
+		setUp()
 		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(usersMock[0], nil)
-		c.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
+		handlerFunc := handlers.GetUserByID(userRepositoryMock)
 
-		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
-		require.NoError(t, err)
-
-		rec := httptest.NewRecorder()
-		c.ServeHTTP(rec, req)
-		res := rec.Result()
-		defer res.Body.Close()
-
+		res, rec := executeRequest(t, http.MethodGet, handlerFunc, "/api/users/", "")
 		formerBody, err := json.MarshalIndent(usersMock[0], "", "    ")
 		require.NoError(t, err)
 
@@ -106,21 +102,11 @@ func TestGetUserByID(t *testing.T) {
 	})
 
 	t.Run("should return error status and error message", func(t *testing.T) {
-		gin.SetMode(gin.TestMode)
-		userRepositoryMock := new(repositories.UserRepositoryMock)
-		c := gin.New()
-
+		setUp()
 		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(models.User{}, errors.New("error de prueba"))
-		c.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
+		handlerFunc := handlers.GetUserByID(userRepositoryMock)
 
-		req, err := http.NewRequest(http.MethodGet, "/api/users/", bytes.NewBufferString(""))
-		require.NoError(t, err)
-
-		rec := httptest.NewRecorder()
-		c.ServeHTTP(rec, req)
-		res := rec.Result()
-		defer res.Body.Close()
-
+		res, rec := executeRequest(t, http.MethodGet, handlerFunc, "/api/users/", "")
 		formerBody, err := json.MarshalIndent(errorMock, "", "    ")
 		require.NoError(t, err)
 
@@ -227,21 +213,11 @@ func TestUpdateUser(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 	t.Run("should return status OK and user", func(t *testing.T) {
-		gin.SetMode(gin.TestMode)
-		userRepositoryMock := new(repositories.UserRepositoryMock)
-		c := gin.New()
-
+		setUp()
 		userRepositoryMock.On("DeleteUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(usersMock[0], nil)
-		c.DELETE("/api/users/", handlers.DeleteUser(userRepositoryMock))
+		handlerFunc := handlers.DeleteUser(userRepositoryMock)
 
-		req, err := http.NewRequest(http.MethodDelete, "/api/users/", bytes.NewBufferString(""))
-		require.NoError(t, err)
-
-		rec := httptest.NewRecorder()
-		c.ServeHTTP(rec, req)
-		res := rec.Result()
-		defer res.Body.Close()
-
+		res, rec := executeRequest(t, http.MethodGet, handlerFunc, "/api/users/", "")
 		formerBody, err := json.MarshalIndent(usersMock[0], "", "    ")
 		require.NoError(t, err)
 
@@ -250,21 +226,11 @@ func TestDeleteUser(t *testing.T) {
 	})
 
 	t.Run("should return error status and error message", func(t *testing.T) {
-		gin.SetMode(gin.TestMode)
-		userRepositoryMock := new(repositories.UserRepositoryMock)
-		c := gin.New()
-
+		setUp()
 		userRepositoryMock.On("DeleteUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(models.User{}, errors.New("error de prueba"))
-		c.DELETE("/api/users/", handlers.DeleteUser(userRepositoryMock))
+		handlerFunc := handlers.DeleteUser(userRepositoryMock)
 
-		req, err := http.NewRequest(http.MethodDelete, "/api/users/", bytes.NewBufferString(""))
-		require.NoError(t, err)
-
-		rec := httptest.NewRecorder()
-		c.ServeHTTP(rec, req)
-		res := rec.Result()
-		defer res.Body.Close()
-
+		res, rec := executeRequest(t, http.MethodGet, handlerFunc, "/api/users/", "")
 		formerBody, err := json.MarshalIndent(errorMock, "", "    ")
 		require.NoError(t, err)
 

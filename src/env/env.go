@@ -7,11 +7,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var MONGO_USERNAME string
-var MONGO_PASSWORD string
-var MONGO_DATABASE string
-var MONGO_URL string
-var MONGO_PORT string
+var (
+	MONGO_USERNAME string
+	MONGO_PASSWORD string
+	MONGO_DATABASE string
+	MONGO_URL      string
+	MONGO_PORT     string
+)
 
 func LoadEnv() {
 	err := godotenv.Load("../.env")
