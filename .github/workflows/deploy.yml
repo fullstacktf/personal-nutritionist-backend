@@ -1,11 +1,9 @@
 name: Deployment
 
-on: [push]
-    # branches:
-    #   - main
-    # inputs:
-    #   version:
-    #     description: 'Image version'
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build_and_push:
