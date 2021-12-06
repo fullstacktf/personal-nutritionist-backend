@@ -16,15 +16,17 @@ type UserRepository struct {
 	db *mongo.Database
 }
 
-func NewUserRepository(db *mongo.Database) *UserRepository {
+func NewUserRepository(db *mongo.Database) models.UserRepository {
 	return &UserRepository{
 		db: db,
 	}
 }
 
 func (r *UserRepository) GetUsers(c *gin.Context) ([]models.User, error) {
-	client, ctx, cancel, collection := database.GetCollection("users")
-	defer database.DropConnection(client, ctx, cancel)
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("users")
 	cursor, err := collection.Find(ctx, bson.D{})
 	if err != nil {
 		return nil, err
@@ -40,29 +42,33 @@ func (r *UserRepository) GetUsers(c *gin.Context) ([]models.User, error) {
 	return users, nil
 }
 
-func (r *UserRepository) GetUserByID(c *gin.Context, id primitive.ObjectID) (models.User, error) {
+func (r *UserRepository) GetUserByID(c *gin.Context, id primitive.ObjectID) (*models.User, error) {
 	var user models.User
 
-	client, ctx, cancel, collection := database.GetCollection("users")
-	defer database.DropConnection(client, ctx, cancel)
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("users")
 	result := collection.FindOne(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
-		return user, errors.New("failed to find an user")
+		return nil, errors.New("failed to find an user")
 	}
 
 	err := result.Decode(&user)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }
 
-func (r *UserRepository) PostUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
+func (r *UserRepository) CreateUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
 	user.ObjectID = primitive.NewObjectID()
 
-	client, ctx, cancel, collection := database.GetCollection("users")
-	defer database.DropConnection(client, ctx, cancel)
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("users")
 	result, err := collection.InsertOne(ctx, user)
 	if err != nil {
 		return primitive.NilObjectID, err
@@ -72,36 +78,40 @@ func (r *UserRepository) PostUser(c *gin.Context, user *models.User) (primitive.
 	return objectID, nil
 }
 
-func (r *UserRepository) PutUser(c *gin.Context, id primitive.ObjectID, newUser models.User) (models.User, error) {
+func (r *UserRepository) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser *models.User) (*models.User, error) {
 	opts := options.FindOneAndUpdate().SetUpsert(false)
 	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.M{"$set": newUser}
 	var user models.User
 
-	client, ctx, cancel, collection := database.GetCollection("users")
-	defer database.DropConnection(client, ctx, cancel)
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("users")
 	err := collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 
 	return newUser, nil
 }
 
-func (r *UserRepository) DeleteUser(c *gin.Context, id primitive.ObjectID) (models.User, error) {
+func (r *UserRepository) DeleteUser(c *gin.Context, id primitive.ObjectID) (*models.User, error) {
 	var user models.User
 
-	client, ctx, cancel, collection := database.GetCollection("users")
-	defer database.DropConnection(client, ctx, cancel)
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("users")
 	result := collection.FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
-		return user, errors.New("failed to delete an user")
+		return nil, errors.New("failed to delete an user")
 	}
 
 	err := result.Decode(&user)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }
