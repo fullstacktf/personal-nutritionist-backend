@@ -1,14 +1,11 @@
 name: Deployment
 
-on:
-  push:
-    inputs:
-      version:
-        description: 'Image version'
-        required: true
-  # pull_request:
-  #   branches:
-  #     - main
+on: [push]
+    # branches:
+    #   - main
+    # inputs:
+    #   version:
+    #     description: 'Image version'
 
 jobs:
   build_and_push:
@@ -45,3 +42,4 @@ jobs:
         script: |
           doctl registry login -t ${{ secrets.DIGITALOCEAN_TOKEN }}
           docker pull ${{ secrets.DOCKER_IMAGE_REGISTRY }}:latest
+          docker-compose down
