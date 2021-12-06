@@ -13,11 +13,7 @@ import (
 const connectTimeout = 5
 
 func getConnectionURI() string {
-	environment := os.Getenv("ENV")
-	if environment == "local" {
-		env.LoadEnv()
-	}
-
+	env.LoadEnv()
 	return "mongodb://" + env.MONGO_USERNAME + ":" + env.MONGO_PASSWORD + "@" + env.MONGO_URL + "/" + env.MONGO_PORT + "/" + env.MONGO_DATABASE + "?authSource=admin"
 }
 
