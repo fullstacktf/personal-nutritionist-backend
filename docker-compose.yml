@@ -12,6 +12,7 @@ services:
       - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
       - "./mongodb:/data/db"
+      - "./data:/docker-entrypoint-initdb.d"
     networks:
       - nutriguide
 
