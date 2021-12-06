@@ -16,9 +16,12 @@ var (
 )
 
 func LoadEnv() {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file 💣")
+	environment := os.Getenv("ENV")
+	if environment == "local" {
+		err := godotenv.Load("../.env")
+		if err != nil {
+			log.Fatal("Error loading .env file 💣")
+		}
 	}
 
 	MONGO_USERNAME = os.Getenv("MONGO_USERNAME")
