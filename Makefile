@@ -18,6 +18,7 @@ coverage:
 
 up:
 	@echo "🍃🔓 Starting mongo database..."
+	@docker build . -t nutriguide-backend
 	@docker-compose up
 
 up-d:

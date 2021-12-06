@@ -12,3 +12,7 @@ type UserRepository interface {
 	UpdateUser(c *gin.Context, id primitive.ObjectID, newUser *User) (*User, error)
 	DeleteUser(c *gin.Context, id primitive.ObjectID) (*User, error)
 }
+
+type EventRepository interface {
+	GetEvents(c *gin.Context) ([]Event, error)
+}
