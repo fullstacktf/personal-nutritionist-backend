@@ -39,9 +39,9 @@ func TestGetEvents(t *testing.T) {
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("GetEvents", mock.AnythingOfType("*gin.Context")).Return(eventsMock, errors.New("error de evento"))
-		context.GET("/api/users/:id/calendar/event/", handlers.GetEvents(eventRepositoryMock))
+		context.GET("/api/users/:id/calendar/", handlers.GetEvents(eventRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/event/", "")
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/", "")
 		formerBody, err := json.MarshalIndent(eventErrorMock, "", "    ")
 		require.NoError(t, err)
 
@@ -54,9 +54,9 @@ func TestGetEventByID(t *testing.T) {
 	t.Run("should return status OK and event", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("GetEventByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&eventsMock[0], nil)
-		context.GET("/api/users/:id/calendar/", handlers.GetEventByID(eventRepositoryMock))
+		context.GET("/api/users/:id/calendar/event/", handlers.GetEventByID(eventRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/", "")
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/event/", "")
 		formerBody, err := json.MarshalIndent(eventsMock[0], "", "    ")
 		require.NoError(t, err)
 
@@ -67,9 +67,9 @@ func TestGetEventByID(t *testing.T) {
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("GetEventByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&eventsMock[0], errors.New("error de evento"))
-		context.GET("/api/users/:id/calendar/", handlers.GetEventByID(eventRepositoryMock))
+		context.GET("/api/users/:id/calendar/event/", handlers.GetEventByID(eventRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/", "")
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/event/", "")
 		formerBody, err := json.MarshalIndent(eventErrorMock, "", "    ")
 		require.NoError(t, err)
 
