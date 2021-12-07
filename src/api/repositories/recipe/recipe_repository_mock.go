@@ -28,5 +28,10 @@ func (m *RecipeRepositoryMock) CreateRecipe(c *gin.Context, recipe *models.Recip
 
 func (m *RecipeRepositoryMock) UpdateRecipe(c *gin.Context, id primitive.ObjectID, newRecipe *models.Recipe) (*models.Recipe, error) {
 	args := m.Called(c, id, newRecipe)
-	return args.Get(0).(*models.Recipe), args.Error(1)
+  return args.Get(0).(*models.Recipe), args.Error(1)
+}
+
+func (m *RecipeRepositoryMock) DeleteRecipe(c *gin.Context, id primitive.ObjectID) (*models.Recipe, error) {
+	args := m.Called(c, id)
+  return args.Get(0).(*models.Recipe), args.Error(1)
 }

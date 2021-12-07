@@ -92,6 +92,26 @@ func (r *RecipeRepository) UpdateRecipe(c *gin.Context, id primitive.ObjectID, n
 	if err != nil {
 		return nil, err
 	}
-
+  
 	return newRecipe, nil
+}
+
+func (r *RecipeRepository) DeleteRecipe(c *gin.Context, id primitive.ObjectID) (*models.Recipe, error) {
+  var recipe models.Recipe
+
+  ctx, cancel := database.GetContext(r.db.Client())
+  defer database.DropConnection(r.db, ctx, cancel)
+
+  collection := r.db.Collection("recipes")
+  result := collection.FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: id}})
+	if result == nil {
+		return nil, errors.New("failed to delete an element")
+	}
+
+	err := result.Decode(&recipe)
+  if err != nil {
+		return nil, err
+	}
+  
+  return &recipe, nil
 }

@@ -143,3 +143,32 @@ func TestUpdateRecipe(t *testing.T) {
 		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
 	})
 }
+
+func TestDeleteRecipe(t *testing.T) {
+	t.Run("should return status OK and recipe", func(t *testing.T) {
+		setUp()
+		recipeRepositoryMock.On("DeleteRecipe", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&recipesMock[0], nil)
+		context.DELETE("/api/users/:id/weekmeal/recipe/:idRecipe/", handlers.DeleteRecipe(recipeRepositoryMock))
+
+		res, rec := executeRequest(t, http.MethodDelete, "/api/users/:id/weekmeal/recipe/:idRecipe/", "")
+		formerBody, err := json.MarshalIndent(recipesMock[0], "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+  })
+  
+  t.Run("should return error status and error message", func(t *testing.T) {
+		setUp()
+    recipeRepositoryMock.On("DeleteRecipe", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&models.Recipe{}, errors.New("error de receta"))
+		context.DELETE("/api/users/:id/weekmeal/recipe/:idRecipe/", handlers.DeleteRecipe(recipeRepositoryMock))
+
+		res, rec := executeRequest(t, http.MethodDelete, "/api/users/:id/weekmeal/recipe/:idRecipe/", "")
+    formerBody, err := json.MarshalIndent(recipeErrorMock, "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+  })
+}
+    
