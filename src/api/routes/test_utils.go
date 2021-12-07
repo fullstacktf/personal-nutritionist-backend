@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	eventRepositories "github.com/fullstacktf/personal-nutritionist-backend/api/repositories/event"
+	recipeRepositories "github.com/fullstacktf/personal-nutritionist-backend/api/repositories/recipe"
 	userRepositories "github.com/fullstacktf/personal-nutritionist-backend/api/repositories/user"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
@@ -18,15 +19,17 @@ type Error struct {
 }
 
 var (
-	context             *gin.Engine
-	userRepositoryMock  *userRepositories.UserRepositoryMock
-	eventRepositoryMock *eventRepositories.EventRepositoryMock
+	context              *gin.Engine
+	userRepositoryMock   *userRepositories.UserRepositoryMock
+	eventRepositoryMock  *eventRepositories.EventRepositoryMock
+	recipeRepositoryMock *recipeRepositories.RecipeRepositoryMock
 )
 
 func setUp() {
 	gin.SetMode(gin.TestMode)
 	userRepositoryMock = new(userRepositories.UserRepositoryMock)
 	eventRepositoryMock = new(eventRepositories.EventRepositoryMock)
+	recipeRepositoryMock = new(recipeRepositories.RecipeRepositoryMock)
 	context = gin.New()
 }
 

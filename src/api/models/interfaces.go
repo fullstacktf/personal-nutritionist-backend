@@ -18,3 +18,7 @@ type EventRepository interface {
 	GetEventByID(c *gin.Context, id primitive.ObjectID) (*Event, error)
 	CreateEvent(c *gin.Context, event *Event) (primitive.ObjectID, error)
 }
+
+type RecipeRepository interface {
+	CreateRecipe(c *gin.Context, recipe *Recipe) (primitive.ObjectID, error)
+}
