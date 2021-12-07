@@ -95,3 +95,23 @@ func (r *EventRepository) UpdateEvent(c *gin.Context, id primitive.ObjectID, new
 
 	return newEvent, nil
 }
+
+func (r *EventRepository) DeleteEvent(c *gin.Context, id primitive.ObjectID) (*models.Event, error) {
+	var event models.Event
+
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("events")
+	result := collection.FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: id}})
+	if result == nil {
+		return nil, errors.New("failed to delete an element")
+	}
+
+	err := result.Decode(&event)
+	if err != nil {
+		return nil, err
+	}
+
+	return &event, nil
+}

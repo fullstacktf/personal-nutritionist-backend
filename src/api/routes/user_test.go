@@ -54,9 +54,9 @@ func TestGetUserByID(t *testing.T) {
 	t.Run("should return status OK and user", func(t *testing.T) {
 		setUp()
 		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&usersMock[0], nil)
-		context.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
+		context.GET("/api/users/:id/", handlers.GetUserByID(userRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodGet, "/api/users/", "")
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/", "")
 		formerBody, err := json.MarshalIndent(usersMock[0], "", "    ")
 		require.NoError(t, err)
 
@@ -67,9 +67,9 @@ func TestGetUserByID(t *testing.T) {
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
 		userRepositoryMock.On("GetUserByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&models.User{}, errors.New("error de usuario"))
-		context.GET("/api/users/", handlers.GetUserByID(userRepositoryMock))
+		context.GET("/api/users/:id/", handlers.GetUserByID(userRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodGet, "/api/users/", "")
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/", "")
 		formerBody, err := json.MarshalIndent(userErrorMock, "", "    ")
 		require.NoError(t, err)
 
@@ -115,11 +115,11 @@ func TestUpdateUser(t *testing.T) {
 	t.Run("should return status OK and user", func(t *testing.T) {
 		setUp()
 		userRepositoryMock.On("UpdateUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &usersMock[0]).Return(&usersMock[0], nil)
-		context.PUT("/api/users/", handlers.UpdateUser(userRepositoryMock))
+		context.PUT("/api/users/:id/", handlers.UpdateUser(userRepositoryMock))
 
 		reqBody, err := json.Marshal(usersMock[0])
 		require.NoError(t, err)
-		res, rec := executeRequest(t, http.MethodPut, "/api/users/", string(reqBody))
+		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/", string(reqBody))
 
 		formerBody, err := json.MarshalIndent(usersMock[0], "", "    ")
 		require.NoError(t, err)
@@ -130,12 +130,12 @@ func TestUpdateUser(t *testing.T) {
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		userRepositoryMock.On("UpdateUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &usersMock[0]).Return(&usersMock[0], errors.New("error de usuario"))
-		context.PUT("/api/users/", handlers.UpdateUser(userRepositoryMock))
+		userRepositoryMock.On("UpdateUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &usersMock[0]).Return(&models.User{}, errors.New("error de usuario"))
+		context.PUT("/api/users/:id/", handlers.UpdateUser(userRepositoryMock))
 
 		reqBody, err := json.Marshal(usersMock[0])
 		require.NoError(t, err)
-		res, rec := executeRequest(t, http.MethodPut, "/api/users/", string(reqBody))
+		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/", string(reqBody))
 
 		formerBody, err := json.MarshalIndent(userErrorMock, "", "    ")
 		require.NoError(t, err)
@@ -149,9 +149,9 @@ func TestDeleteUser(t *testing.T) {
 	t.Run("should return status OK and user", func(t *testing.T) {
 		setUp()
 		userRepositoryMock.On("DeleteUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&usersMock[0], nil)
-		context.DELETE("/api/users/", handlers.DeleteUser(userRepositoryMock))
+		context.DELETE("/api/users/:id/", handlers.DeleteUser(userRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodDelete, "/api/users/", "")
+		res, rec := executeRequest(t, http.MethodDelete, "/api/users/:id/", "")
 		formerBody, err := json.MarshalIndent(usersMock[0], "", "    ")
 		require.NoError(t, err)
 
@@ -162,9 +162,9 @@ func TestDeleteUser(t *testing.T) {
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
 		userRepositoryMock.On("DeleteUser", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&models.User{}, errors.New("error de usuario"))
-		context.DELETE("/api/users/", handlers.DeleteUser(userRepositoryMock))
+		context.DELETE("/api/users/:id/", handlers.DeleteUser(userRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodDelete, "/api/users/", "")
+		res, rec := executeRequest(t, http.MethodDelete, "/api/users/:id/", "")
 		formerBody, err := json.MarshalIndent(userErrorMock, "", "    ")
 		require.NoError(t, err)
 
