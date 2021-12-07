@@ -15,16 +15,6 @@ jobs:
       - name: Run test
         run: make test
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.29
-          working-directory: src/
-      # - name: golangci-lint
-      #   uses: reviewdog/action-golangci-lint@v2
-      #   with:
-      #     workdir: src/
-
       - name: Discord notification
         uses: rjstone/discord-webhook-notify@v1
         if: success()
@@ -46,3 +36,15 @@ jobs:
           avatarUrl: https://image.shutterstock.com/image-vector/funny-cute-avocado-character-vector-260nw-1667771986.jpg
           details: Test failed.
           webhookUrl: ${{ secrets.DISCORD_BACK }}
+
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
+          version: v1.29
+          working-directory: src/
