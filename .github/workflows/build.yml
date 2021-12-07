@@ -14,8 +14,7 @@ jobs:
         run: make test
 
       - name: golangci-lint
-        run: cd src
-        uses: golangci/golangci-lint-action@v2
+        uses: cd src && golangci/golangci-lint-action@v2
 
       - name: Discord notification
         uses: rjstone/discord-webhook-notify@v1
