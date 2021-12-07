@@ -23,6 +23,8 @@ type EventRepository interface {
 
 type RecipeRepository interface {
 	GetRecipes(c *gin.Context) ([]Recipe, error)
+	GetRecipeByID(c *gin.Context, id primitive.ObjectID) (*Recipe, error)
 	CreateRecipe(c *gin.Context, recipe *Recipe) (primitive.ObjectID, error)
-	DeleteRecipe(c *gin.Context, id primitive.ObjectID) (*Recipe, error)
+  UpdateRecipe(c *gin.Context, id primitive.ObjectID, newRecipe *Recipe) (*Recipe, error)
+  DeleteRecipe(c *gin.Context, id primitive.ObjectID) (*Recipe, error)
 }

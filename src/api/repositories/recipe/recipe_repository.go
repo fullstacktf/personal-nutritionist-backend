@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type RecipeRepository struct {
@@ -41,6 +42,26 @@ func (r *RecipeRepository) GetRecipes(c *gin.Context) ([]models.Recipe, error) {
 	return recipes, nil
 }
 
+func (r *RecipeRepository) GetRecipeByID(c *gin.Context, id primitive.ObjectID) (*models.Recipe, error) {
+	var recipe models.Recipe
+
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("recipes")
+	result := collection.FindOne(ctx, bson.D{{Key: "_id", Value: id}})
+	if result == nil {
+		return nil, errors.New("failed to find an recipe")
+	}
+
+	err := result.Decode(&recipe)
+	if err != nil {
+		return nil, err
+	}
+
+	return &recipe, nil
+}
+
 func (r *RecipeRepository) CreateRecipe(c *gin.Context, recipe *models.Recipe) (primitive.ObjectID, error) {
 	recipe.ObjectID = primitive.NewObjectID()
 
@@ -57,22 +78,40 @@ func (r *RecipeRepository) CreateRecipe(c *gin.Context, recipe *models.Recipe) (
 	return objectID, nil
 }
 
-func (r *RecipeRepository) DeleteRecipe(c *gin.Context, id primitive.ObjectID) (*models.Recipe, error) {
+func (r *RecipeRepository) UpdateRecipe(c *gin.Context, id primitive.ObjectID, newRecipe *models.Recipe) (*models.Recipe, error) {
+	opts := options.FindOneAndUpdate().SetUpsert(false)
+	filter := bson.D{{Key: "_id", Value: id}}
+	update := bson.M{"$set": newRecipe}
 	var recipe models.Recipe
 
 	ctx, cancel := database.GetContext(r.db.Client())
 	defer database.DropConnection(r.db, ctx, cancel)
 
 	collection := r.db.Collection("recipes")
-	result := collection.FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: id}})
+	err := collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&recipe)
+	if err != nil {
+		return nil, err
+	}
+  
+	return newRecipe, nil
+}
+
+func (r *RecipeRepository) DeleteRecipe(c *gin.Context, id primitive.ObjectID) (*models.Recipe, error) {
+  var recipe models.Recipe
+
+  ctx, cancel := database.GetContext(r.db.Client())
+  defer database.DropConnection(r.db, ctx, cancel)
+
+  collection := r.db.Collection("recipes")
+  result := collection.FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
 		return nil, errors.New("failed to delete an element")
 	}
 
 	err := result.Decode(&recipe)
-	if err != nil {
+  if err != nil {
 		return nil, err
 	}
-
-	return &recipe, nil
+  
+  return &recipe, nil
 }

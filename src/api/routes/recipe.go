@@ -13,9 +13,9 @@ func StartRecipes(router *gin.Engine) {
 	recipes := router.Group("/api/users/:id/weekmeal")
 	{
 		recipes.GET("/", handlers.GetRecipes(recipeRepository))
-		// recipes.GET("recipe/:idRecipe", handlers.GetRecipeByID)
+		recipes.GET("recipe/:idRecipe", handlers.GetRecipeByID(recipeRepository))
 		recipes.POST("/recipe", handlers.CreateRecipe(recipeRepository))
-		// recipes.PUT("recipe/:idRecipe", handlers.PutRecipe)
-		recipes.DELETE("recipe/:idRecipe", handlers.DeleteRecipe(recipeRepository))
+		recipes.PUT("recipe/:idRecipe", handlers.UpdateRecipe(recipeRepository))
+  	recipes.DELETE("recipe/:idRecipe", handlers.DeleteRecipe(recipeRepository))
 	}
 }
