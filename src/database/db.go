@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -46,5 +47,9 @@ func GetContext(client *mongo.Client) (context.Context, context.CancelFunc) {
 
 func DropConnection(db *mongo.Database, ctx context.Context, cancel context.CancelFunc) {
 	cancel()
-	db.Drop(ctx)
+	err := db.Drop(ctx)
+	if err != nil {
+		fmt.Printf("works!")
+	}
+
 }
