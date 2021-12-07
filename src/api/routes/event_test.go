@@ -110,3 +110,37 @@ func TestCreateEvent(t *testing.T) {
 		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
 	})
 }
+
+func TestUpdateEvent(t *testing.T) {
+	t.Run("should return status OK and event", func(t *testing.T) {
+		setUp()
+		eventRepositoryMock.On("UpdateEvent", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &eventsMock[0]).Return(&eventsMock[0], nil)
+		context.PUT("/api/users/:id/calendar/event/:idEvent", handlers.UpdateEvent(eventRepositoryMock))
+
+		reqBody, err := json.Marshal(eventsMock[0])
+		require.NoError(t, err)
+		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/calendar/event/:idEvent", string(reqBody))
+
+		formerBody, err := json.MarshalIndent(eventsMock[0], "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
+
+	t.Run("should return error status and error message", func(t *testing.T) {
+		setUp()
+		eventRepositoryMock.On("UpdateEvent", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &eventsMock[0]).Return(&eventsMock[0], errors.New("error de evento"))
+		context.PUT("/api/users/:id/calendar/event/:idEvent", handlers.UpdateEvent(eventRepositoryMock))
+
+		reqBody, err := json.Marshal(eventsMock[0])
+		require.NoError(t, err)
+		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/calendar/event/:idEvent", string(reqBody))
+
+		formerBody, err := json.MarshalIndent(eventErrorMock, "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
+}

@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type EventRepository struct {
@@ -46,21 +47,20 @@ func (r *EventRepository) GetEventByID(c *gin.Context, id primitive.ObjectID) (*
 
 	ctx, cancel := database.GetContext(r.db.Client())
 	defer database.DropConnection(r.db, ctx, cancel)
-  
-  collection := r.db.Collection("events")
-  result := collection.FindOne(ctx, bson.D{{Key: "_id", Value: id}})
+
+	collection := r.db.Collection("events")
+	result := collection.FindOne(ctx, bson.D{{Key: "_id", Value: id}})
 	if result == nil {
 		return nil, errors.New("failed to find an user")
 	}
-  
-  err := result.Decode(&event)
+
+	err := result.Decode(&event)
 	if err != nil {
 		return nil, err
 	}
 
 	return &event, nil
 }
-  
 
 func (r *EventRepository) CreateEvent(c *gin.Context, event *models.Event) (primitive.ObjectID, error) {
 	event.ObjectID = primitive.NewObjectID()
@@ -76,4 +76,22 @@ func (r *EventRepository) CreateEvent(c *gin.Context, event *models.Event) (prim
 	objectID := result.InsertedID.(primitive.ObjectID)
 
 	return objectID, nil
+}
+
+func (r *EventRepository) UpdateEvent(c *gin.Context, id primitive.ObjectID, newEvent *models.Event) (*models.Event, error) {
+	opts := options.FindOneAndUpdate().SetUpsert(false)
+	filter := bson.D{{Key: "_id", Value: id}}
+	update := bson.M{"$set": newEvent}
+	var event models.Event
+
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("events")
+	err := collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&event)
+	if err != nil {
+		return nil, err
+	}
+
+	return newEvent, nil
 }
