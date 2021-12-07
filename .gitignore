@@ -4,3 +4,4 @@ mongodb/
 *.out
 *.test
 .env
+src/database/init

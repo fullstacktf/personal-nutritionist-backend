@@ -28,6 +28,22 @@ func GetEventByID(repository models.EventRepository) gin.HandlerFunc {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
 			c.IndentedJSON(http.StatusOK, event)
+    }
+  }
+}
+      
+func CreateEvent(repository models.EventRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var event models.Event
+		if err := c.BindJSON(&event); err != nil {
+			return
+		}
+
+		objectId, err := repository.CreateEvent(c, &event)
+		if err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusCreated, objectId)
 		}
 	}
 }

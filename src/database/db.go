@@ -46,5 +46,8 @@ func GetContext(client *mongo.Client) (context.Context, context.CancelFunc) {
 
 func DropConnection(db *mongo.Database, ctx context.Context, cancel context.CancelFunc) {
 	cancel()
-	db.Drop(ctx)
+	err := db.Drop(ctx)
+	if err != nil {
+		log.Fatalln("Failed to Drop connection 💣:", err)
+	}
 }

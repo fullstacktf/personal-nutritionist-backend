@@ -16,4 +16,5 @@ type UserRepository interface {
 type EventRepository interface {
 	GetEvents(c *gin.Context) ([]Event, error)
 	GetEventByID(c *gin.Context, id primitive.ObjectID) (*Event, error)
+	CreateEvent(c *gin.Context, event *Event) (primitive.ObjectID, error)
 }
