@@ -16,6 +16,6 @@ func StartEvents(router *gin.Engine) {
 		events.GET("/event/:idEvent", handlers.GetEventByID(EventRepository))
 		events.POST("/event", handlers.CreateEvent(EventRepository))
 		events.PUT("/event/:idEvent", handlers.UpdateEvent(EventRepository))
-		// events.DELETE("/event/:idEvent", handlers.DeleteEvent)
+		events.DELETE("/event/:idEvent", handlers.DeleteEvent(EventRepository))
 	}
 }

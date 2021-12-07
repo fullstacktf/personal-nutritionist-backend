@@ -64,3 +64,16 @@ func UpdateEvent(repository models.EventRepository) gin.HandlerFunc {
 		}
 	}
 }
+
+func DeleteEvent(repository models.EventRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, _ := primitive.ObjectIDFromHex(c.Param("idEvent"))
+
+		event, err := repository.DeleteEvent(c, id)
+		if err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusOK, event)
+		}
+	}
+}

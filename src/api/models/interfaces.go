@@ -18,9 +18,11 @@ type EventRepository interface {
 	GetEventByID(c *gin.Context, id primitive.ObjectID) (*Event, error)
 	CreateEvent(c *gin.Context, event *Event) (primitive.ObjectID, error)
 	UpdateEvent(c *gin.Context, id primitive.ObjectID, newEvent *Event) (*Event, error)
+	DeleteEvent(c *gin.Context, id primitive.ObjectID) (*Event, error)
 }
 
 type RecipeRepository interface {
+	GetRecipes(c *gin.Context) ([]Recipe, error)
 	CreateRecipe(c *gin.Context, recipe *Recipe) (primitive.ObjectID, error)
 	UpdateRecipe(c *gin.Context, id primitive.ObjectID, newRecipe *Recipe) (*Recipe, error)
 }

@@ -19,6 +19,27 @@ func NewRecipeRepository(db *mongo.Database) models.RecipeRepository {
 		db: db,
 	}
 }
+
+func (r *RecipeRepository) GetRecipes(c *gin.Context) ([]models.Recipe, error) {
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("recipes")
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var recipes []models.Recipe
+	err = cursor.All(ctx, &recipes)
+	if err != nil {
+		return nil, err
+	}
+
+	return recipes, nil
+}
+
 func (r *RecipeRepository) CreateRecipe(c *gin.Context, recipe *models.Recipe) (primitive.ObjectID, error) {
 	recipe.ObjectID = primitive.NewObjectID()
 
