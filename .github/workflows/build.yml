@@ -22,6 +22,8 @@ jobs:
       #     working-directory: src
       - name: golangci-lint
         uses: reviewdog/action-golangci-lint@v2
+        with:
+          workdir: src/
 
       - name: Discord notification
         uses: rjstone/discord-webhook-notify@v1
