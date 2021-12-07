@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -49,7 +48,7 @@ func DropConnection(db *mongo.Database, ctx context.Context, cancel context.Canc
 	cancel()
 	err := db.Drop(ctx)
 	if err != nil {
-		fmt.Printf("works!")
+		log.Fatalln("Failed to Drop connection 💣:", err)
 	}
 
 }
