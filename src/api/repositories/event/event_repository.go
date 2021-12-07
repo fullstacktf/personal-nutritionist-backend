@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"errors"
+
 	"github.com/fullstacktf/personal-nutritionist-backend/api/models"
 	"github.com/fullstacktf/personal-nutritionist-backend/database"
 	"github.com/gin-gonic/gin"
@@ -38,6 +40,27 @@ func (r *EventRepository) GetEvents(c *gin.Context) ([]models.Event, error) {
 
 	return events, nil
 }
+
+func (r *EventRepository) GetEventByID(c *gin.Context, id primitive.ObjectID) (*models.Event, error) {
+	var event models.Event
+
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+  
+  collection := r.db.Collection("events")
+  result := collection.FindOne(ctx, bson.D{{Key: "_id", Value: id}})
+	if result == nil {
+		return nil, errors.New("failed to find an user")
+	}
+  
+  err := result.Decode(&event)
+	if err != nil {
+		return nil, err
+	}
+
+	return &event, nil
+}
+  
 
 func (r *EventRepository) CreateEvent(c *gin.Context, event *models.Event) (primitive.ObjectID, error) {
 	event.ObjectID = primitive.NewObjectID()
