@@ -5,6 +5,7 @@ import (
 	"github.com/fullstacktf/personal-nutritionist-backend/database"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -36,4 +37,20 @@ func (r *EventRepository) GetEvents(c *gin.Context) ([]models.Event, error) {
 	}
 
 	return events, nil
+}
+
+func (r *EventRepository) CreateEvent(c *gin.Context, event *models.Event) (primitive.ObjectID, error) {
+	event.ObjectID = primitive.NewObjectID()
+
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("events")
+	result, err := collection.InsertOne(ctx, event)
+	if err != nil {
+		return primitive.NilObjectID, err
+	}
+	objectID := result.InsertedID.(primitive.ObjectID)
+
+	return objectID, nil
 }
