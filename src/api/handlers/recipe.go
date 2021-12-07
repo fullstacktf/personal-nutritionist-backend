@@ -19,21 +19,18 @@ func GetRecipes(repository models.RecipeRepository) gin.HandlerFunc {
 	}
 }
 
-// func GetRecipes(c *gin.Context) {
-// 	c.IndentedJSON(http.StatusOK, recipes)
-// }
+func GetRecipeByID(repository models.RecipeRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, _ := primitive.ObjectIDFromHex(c.Param("idRecipe"))
 
-// func GetRecipeByID(c *gin.Context) {
-// 	id := c.Param("idRecipe")
-
-// 	for _, recipe := range recipes {
-// 		if recipe.ID == id {
-// 			c.IndentedJSON(http.StatusOK, recipe)
-// 			return
-// 		}
-// 	}
-// 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "recipe not found 💣"})
-// }
+		user, err := repository.GetRecipeByID(c, id)
+		if err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusOK, user)
+		}
+	}
+}
 
 func CreateRecipe(repository models.RecipeRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {

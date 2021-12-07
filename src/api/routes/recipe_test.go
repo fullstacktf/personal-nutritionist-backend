@@ -49,6 +49,34 @@ func TestGetRecipes(t *testing.T) {
 	})
 }
 
+func TestGetRecipeByID(t *testing.T) {
+	t.Run("should return status OK and recipe", func(t *testing.T) {
+		setUp()
+		recipeRepositoryMock.On("GetRecipeByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&recipesMock[0], nil)
+		context.GET("/api/users/:id/weekmeal/recipe/:idRecipe/", handlers.GetRecipeByID(recipeRepositoryMock))
+
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/weekmeal/recipe/:idRecipe/", "")
+		formerBody, err := json.MarshalIndent(recipesMock[0], "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
+
+	t.Run("should return error status and error message", func(t *testing.T) {
+		setUp()
+		recipeRepositoryMock.On("GetRecipeByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&models.Recipe{}, errors.New("error de receta"))
+		context.GET("/api/users/:id/weekmeal/recipe/:idRecipe/", handlers.GetRecipeByID(recipeRepositoryMock))
+
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/weekmeal/recipe/:idRecipe/", "")
+		formerBody, err := json.MarshalIndent(recipeErrorMock, "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
+}
+
 func TestCreateRecipe(t *testing.T) {
 	t.Run("should return status OK and recipe", func(t *testing.T) {
 		setUp()
