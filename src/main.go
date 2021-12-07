@@ -24,6 +24,9 @@ func main() {
 	router.NoRoute(func(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 	})
-	router.Run(":8080")
-	fmt.Println("Funciono")
+	err := router.Run(":8080")
+
+	if err != nil {
+		fmt.Println("Funciono")
+	}
 }
