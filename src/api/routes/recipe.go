@@ -14,7 +14,7 @@ func StartRecipes(router *gin.Engine) {
 		// recipes.GET("/", handlers.GetRecipes)
 		// recipes.GET("recipe/:idRecipe", handlers.GetRecipeByID)
 		recipes.POST("/recipe", handlers.CreateRecipe(RecipeRepository))
-		// recipes.PUT("recipe/:idRecipe", handlers.PutRecipe)
+		recipes.PUT("recipe/:idRecipe", handlers.UpdateRecipe(RecipeRepository))
 		// recipes.DELETE("recipe/:idRecipe", handlers.DeleteRecipe)
 	}
 }

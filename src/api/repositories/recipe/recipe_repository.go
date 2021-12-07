@@ -4,8 +4,10 @@ import (
 	"github.com/fullstacktf/personal-nutritionist-backend/api/models"
 	"github.com/fullstacktf/personal-nutritionist-backend/database"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type RecipeRepository struct {
@@ -31,4 +33,22 @@ func (r *RecipeRepository) CreateRecipe(c *gin.Context, recipe *models.Recipe) (
 	objectID := result.InsertedID.(primitive.ObjectID)
 
 	return objectID, nil
+}
+
+func (r *RecipeRepository) UpdateRecipe(c *gin.Context, id primitive.ObjectID, newRecipe *models.Recipe) (*models.Recipe, error) {
+	opts := options.FindOneAndUpdate().SetUpsert(false)
+	filter := bson.D{{Key: "_id", Value: id}}
+	update := bson.M{"$set": newRecipe}
+	var recipe models.Recipe
+
+	ctx, cancel := database.GetContext(r.db.Client())
+	defer database.DropConnection(r.db, ctx, cancel)
+
+	collection := r.db.Collection("recipes")
+	err := collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&recipe)
+	if err != nil {
+		return nil, err
+	}
+
+	return newRecipe, nil
 }
