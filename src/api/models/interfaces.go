@@ -18,4 +18,5 @@ type EventRepository interface {
 	GetEventByID(c *gin.Context, id primitive.ObjectID) (*Event, error)
 	CreateEvent(c *gin.Context, event *Event) (primitive.ObjectID, error)
 	UpdateEvent(c *gin.Context, id primitive.ObjectID, newEvent *Event) (*Event, error)
+	DeleteEvent(c *gin.Context, id primitive.ObjectID) (*Event, error)
 }

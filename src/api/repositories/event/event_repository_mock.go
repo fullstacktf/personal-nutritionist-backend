@@ -30,3 +30,8 @@ func (m *EventRepositoryMock) UpdateEvent(c *gin.Context, id primitive.ObjectID,
 	args := m.Called(c, id, newEvent)
 	return args.Get(0).(*models.Event), args.Error(1)
 }
+
+func (m *EventRepositoryMock) DeleteEvent(c *gin.Context, id primitive.ObjectID) (*models.Event, error) {
+	args := m.Called(c, id)
+	return args.Get(0).(*models.Event), args.Error(1)
+}

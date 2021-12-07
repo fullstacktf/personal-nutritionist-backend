@@ -38,7 +38,7 @@ func TestGetEvents(t *testing.T) {
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		eventRepositoryMock.On("GetEvents", mock.AnythingOfType("*gin.Context")).Return(eventsMock, errors.New("error de evento"))
+		eventRepositoryMock.On("GetEvents", mock.AnythingOfType("*gin.Context")).Return([]models.Event{}, errors.New("error de evento"))
 		context.GET("/api/users/:id/calendar/", handlers.GetEvents(eventRepositoryMock))
 
 		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/", "")
@@ -54,9 +54,9 @@ func TestGetEventByID(t *testing.T) {
 	t.Run("should return status OK and event", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("GetEventByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&eventsMock[0], nil)
-		context.GET("/api/users/:id/calendar/event/", handlers.GetEventByID(eventRepositoryMock))
+		context.GET("/api/users/:id/calendar/event/:idEvent/", handlers.GetEventByID(eventRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/event/", "")
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/event/:idEvent/", "")
 		formerBody, err := json.MarshalIndent(eventsMock[0], "", "    ")
 		require.NoError(t, err)
 
@@ -66,10 +66,10 @@ func TestGetEventByID(t *testing.T) {
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		eventRepositoryMock.On("GetEventByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&eventsMock[0], errors.New("error de evento"))
-		context.GET("/api/users/:id/calendar/event/", handlers.GetEventByID(eventRepositoryMock))
+		eventRepositoryMock.On("GetEventByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&models.Event{}, errors.New("error de evento"))
+		context.GET("/api/users/:id/calendar/event/:idEvent/", handlers.GetEventByID(eventRepositoryMock))
 
-		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/event/", "")
+		res, rec := executeRequest(t, http.MethodGet, "/api/users/:id/calendar/event/:idEvent/", "")
 		formerBody, err := json.MarshalIndent(eventErrorMock, "", "    ")
 		require.NoError(t, err)
 
@@ -79,14 +79,14 @@ func TestGetEventByID(t *testing.T) {
 }
 
 func TestCreateEvent(t *testing.T) {
-	t.Run("should return status OK and user", func(t *testing.T) {
+	t.Run("should return status OK and event", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("CreateEvent", mock.AnythingOfType("*gin.Context"), &eventsMock[0]).Return(eventsMock[0].ObjectID, nil)
-		context.POST("/api/users/:id/calendar/event", handlers.CreateEvent(eventRepositoryMock))
+		context.POST("/api/users/:id/calendar/event/", handlers.CreateEvent(eventRepositoryMock))
 
 		reqBody, err := json.Marshal(eventsMock[0])
 		require.NoError(t, err)
-		res, rec := executeRequest(t, http.MethodPost, "/api/users/:id/calendar/event", string(reqBody))
+		res, rec := executeRequest(t, http.MethodPost, "/api/users/:id/calendar/event/", string(reqBody))
 
 		expect := "\"" + eventsMock[0].ObjectID.Hex() + "\""
 
@@ -97,11 +97,11 @@ func TestCreateEvent(t *testing.T) {
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("CreateEvent", mock.AnythingOfType("*gin.Context"), &eventsMock[0]).Return(primitive.NilObjectID, errors.New("error de evento"))
-		context.POST("/api/users/:id/calendar/event", handlers.CreateEvent(eventRepositoryMock))
+		context.POST("/api/users/:id/calendar/event/", handlers.CreateEvent(eventRepositoryMock))
 
 		reqBody, err := json.Marshal(eventsMock[0])
 		require.NoError(t, err)
-		res, rec := executeRequest(t, http.MethodPost, "/api/users/:id/calendar/event", string(reqBody))
+		res, rec := executeRequest(t, http.MethodPost, "/api/users/:id/calendar/event/", string(reqBody))
 
 		formerBody, err := json.MarshalIndent(eventErrorMock, "", "    ")
 		require.NoError(t, err)
@@ -115,11 +115,11 @@ func TestUpdateEvent(t *testing.T) {
 	t.Run("should return status OK and event", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("UpdateEvent", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &eventsMock[0]).Return(&eventsMock[0], nil)
-		context.PUT("/api/users/:id/calendar/event/:idEvent", handlers.UpdateEvent(eventRepositoryMock))
+		context.PUT("/api/users/:id/calendar/event/:idEvent/", handlers.UpdateEvent(eventRepositoryMock))
 
 		reqBody, err := json.Marshal(eventsMock[0])
 		require.NoError(t, err)
-		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/calendar/event/:idEvent", string(reqBody))
+		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/calendar/event/:idEvent/", string(reqBody))
 
 		formerBody, err := json.MarshalIndent(eventsMock[0], "", "    ")
 		require.NoError(t, err)
@@ -130,13 +130,41 @@ func TestUpdateEvent(t *testing.T) {
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		eventRepositoryMock.On("UpdateEvent", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &eventsMock[0]).Return(&eventsMock[0], errors.New("error de evento"))
-		context.PUT("/api/users/:id/calendar/event/:idEvent", handlers.UpdateEvent(eventRepositoryMock))
+		eventRepositoryMock.On("UpdateEvent", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &eventsMock[0]).Return(&models.Event{}, errors.New("error de evento"))
+		context.PUT("/api/users/:id/calendar/event/:idEvent/", handlers.UpdateEvent(eventRepositoryMock))
 
 		reqBody, err := json.Marshal(eventsMock[0])
 		require.NoError(t, err)
-		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/calendar/event/:idEvent", string(reqBody))
+		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/calendar/event/:idEvent/", string(reqBody))
 
+		formerBody, err := json.MarshalIndent(eventErrorMock, "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusNotFound, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
+}
+
+func TestDeleteEvent(t *testing.T) {
+	t.Run("should return status OK and event", func(t *testing.T) {
+		setUp()
+		eventRepositoryMock.On("DeleteEvent", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&eventsMock[0], nil)
+		context.DELETE("/api/users/:id/calendar/event/:idEvent/", handlers.DeleteEvent(eventRepositoryMock))
+
+		res, rec := executeRequest(t, http.MethodDelete, "/api/users/:id/calendar/event/:idEvent/", "")
+		formerBody, err := json.MarshalIndent(eventsMock[0], "", "    ")
+		require.NoError(t, err)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
+	})
+
+	t.Run("should return error status and error message", func(t *testing.T) {
+		setUp()
+		eventRepositoryMock.On("DeleteEvent", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&models.Event{}, errors.New("error de evento"))
+		context.DELETE("/api/users/:id/calendar/event/:idEvent/", handlers.DeleteEvent(eventRepositoryMock))
+
+		res, rec := executeRequest(t, http.MethodDelete, "/api/users/:id/calendar/event/:idEvent/", "")
 		formerBody, err := json.MarshalIndent(eventErrorMock, "", "    ")
 		require.NoError(t, err)
 
