@@ -62,9 +62,9 @@ func TestGetEventByID(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
 		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
-  }
-  
-  t.Run("should return error status and error message", func(t *testing.T) {
+	})
+
+	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
 		eventRepositoryMock.On("GetEventByID", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID).Return(&eventsMock[0], errors.New("error de evento"))
 		context.GET("/api/users/:id/calendar/event/", handlers.GetEventByID(eventRepositoryMock))
