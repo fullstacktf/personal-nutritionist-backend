@@ -1,0 +1,49 @@
+name: CI
+
+on: [push]
+permissions:
+  contents: read
+
+jobs:
+  test-and-notification:
+    name: run test, Discord notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run test
+        run: make test
+
+      - name: Discord notification
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          username: AvocaDev-Back
+          color: '#00ff77'
+          avatarUrl: https://ih1.redbubble.net/image.1174013826.2437/st,small,507x507-pad,600x600,f8f8f8.jpg
+          details: Test succeeded.
+          webhookUrl: ${{ secrets.DISCORD_BACK }}
+
+      - name: Test failed
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          username: AvocaDev-Back
+          color: '#ff0000'
+          avatarUrl: https://image.shutterstock.com/image-vector/funny-cute-avocado-character-vector-260nw-1667771986.jpg
+          details: Test failed.
+          webhookUrl: ${{ secrets.DISCORD_BACK }}
+
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+          working-directory: src/

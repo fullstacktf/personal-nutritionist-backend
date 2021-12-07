@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/fullstacktf/personal-nutritionist-backend/api/routes"
@@ -24,6 +24,9 @@ func main() {
 	router.NoRoute(func(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 	})
-	router.Run(":8080")
-	fmt.Println("Funciono")
+
+	err := router.Run(":8080")
+	if err != nil {
+		log.Fatalln("Error running on port 💣:", err)
+	}
 }
