@@ -101,7 +101,7 @@ func TestUpdateRecipe(t *testing.T) {
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		recipeRepositoryMock.On("UpdateRecipe", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &recipesMock[0]).Return(&recipesMock[0], errors.New("error de receta"))
+		recipeRepositoryMock.On("UpdateRecipe", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &recipesMock[0]).Return(&models.Recipe{}, errors.New("error de receta"))
 		context.PUT("/api/users/:id/weekmeal/recipe/:idRecipe", handlers.UpdateRecipe(recipeRepositoryMock))
 
 		reqBody, err := json.Marshal(recipesMock[0])
