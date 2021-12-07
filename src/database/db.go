@@ -50,5 +50,4 @@ func DropConnection(db *mongo.Database, ctx context.Context, cancel context.Canc
 	if err != nil {
 		log.Fatalln("Failed to Drop connection 💣:", err)
 	}
-
 }
