@@ -8,12 +8,13 @@ import (
 )
 
 func StartRecipes(router *gin.Engine) {
-	RecipeRepository := repositories.NewRecipeRepository(database.InitConnection())
+	recipeRepository := repositories.NewRecipeRepository(database.InitConnection())
+
 	recipes := router.Group("/api/users/:id/weekmeal")
 	{
-		// recipes.GET("/", handlers.GetRecipes)
+		recipes.GET("/", handlers.GetRecipes(recipeRepository))
 		// recipes.GET("recipe/:idRecipe", handlers.GetRecipeByID)
-		recipes.POST("/recipe", handlers.CreateRecipe(RecipeRepository))
+		recipes.POST("/recipe", handlers.CreateRecipe(recipeRepository))
 		// recipes.PUT("recipe/:idRecipe", handlers.PutRecipe)
 		// recipes.DELETE("recipe/:idRecipe", handlers.DeleteRecipe)
 	}

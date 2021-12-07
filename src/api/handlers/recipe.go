@@ -7,16 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// var recipes = []models.Recipe{
-// 	{ID: "1", Name: "Porridge de nueces y arandanos", TypeDiet: "Vegana", TypeMeal: "Desayuno", Alergens: []string{"Frutos secos"}, Date: "24-12-2021", Ingredients: []string{"Nueces", "Arándanos"}},
-// 	{ID: "2", Name: "Papas rellenas", TypeMeal: "Almuerzo", Alergens: []string{"Carne de cerdo", "Carne de vaca"}, Date: "12-12-2021", Ingredients: []string{"Papas", "Carne", "Mojo"}},
-// }
-
-// func GetRecipes(repository repositories.GetRecipes) gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-
-// 	}
-// }
+func GetRecipes(repository models.RecipeRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		recipes, err := repository.GetRecipes(c)
+		if err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusOK, recipes)
+		}
+	}
+}
 
 // func GetRecipes(c *gin.Context) {
 // 	c.IndentedJSON(http.StatusOK, recipes)
