@@ -68,24 +68,6 @@ func UpdateRecipe(repository models.RecipeRepository) gin.HandlerFunc {
 	}
 }
 
-// func PutRecipe(c *gin.Context) {
-// 	id := c.Param("idRecipe")
-
-// 	var updatedRecipe models.Recipe
-// 	if err := c.BindJSON(&updatedRecipe); err != nil {
-// 		return
-// 	}
-
-// 	for index, recipe := range recipes {
-// 		if id == recipe.ID {
-// 			recipes[index] = updatedRecipe
-// 			c.IndentedJSON(http.StatusOK, updatedRecipe)
-// 			return
-// 		}
-// 	}
-// 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "recipe not found 💣"})
-// }
-
 // func DeleteRecipe(c *gin.Context) {
 // 	id := c.Param("idRecipe")
 
