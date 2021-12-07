@@ -86,7 +86,7 @@ func TestUpdateRecipe(t *testing.T) {
 	t.Run("should return status OK and recipe", func(t *testing.T) {
 		setUp()
 		recipeRepositoryMock.On("UpdateRecipe", mock.AnythingOfType("*gin.Context"), primitive.NilObjectID, &recipesMock[0]).Return(&recipesMock[0], nil)
-		context.PUT("/api/users/:id/weekmeal/recipe/:idRecipe", handlers.UpdateRecipe(recipeRepositoryMock))
+		context.PUT("/api/users/:id/weekmeal/recipe/:idRecipe/", handlers.UpdateRecipe(recipeRepositoryMock))
 
 		reqBody, err := json.Marshal(recipesMock[0])
 		require.NoError(t, err)
