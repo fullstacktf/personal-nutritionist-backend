@@ -106,7 +106,7 @@ func TestUpdateRecipe(t *testing.T) {
 
 		reqBody, err := json.Marshal(recipesMock[0])
 		require.NoError(t, err)
-		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/weekmeal/recipe/:idRecipe", string(reqBody))
+		res, rec := executeRequest(t, http.MethodPut, "/api/users/:id/weekmeal/recipe/:idRecipe/", string(reqBody))
 
 		formerBody, err := json.MarshalIndent(recipeErrorMock, "", "    ")
 		require.NoError(t, err)
