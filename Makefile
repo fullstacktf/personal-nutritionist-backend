@@ -10,10 +10,15 @@ build:
 
 test:
 	@echo "👁‍🗨 Testing Project..."
-	@cd src && go test ./...
+	@cd src && go test ./... -cover
+
+coverage:
+	@echo "👁‍🗨 Testing Project with coverage..."
+	@cd src && go test ./... -cover -coverprofile=c.out && go tool cover -html=c.out -o coverage.html
 
 up:
 	@echo "🍃🔓 Starting mongo database..."
+	@docker build . -t nutriguide-backend
 	@docker-compose up
 
 up-d:

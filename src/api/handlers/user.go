@@ -32,14 +32,14 @@ func GetUserByID(repository models.UserRepository) gin.HandlerFunc {
 	}
 }
 
-func PostUser(repository models.UserRepository) gin.HandlerFunc {
+func CreateUser(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 		if err := c.BindJSON(&user); err != nil {
 			return
 		}
 
-		objectId, err := repository.PostUser(c, &user)
+		objectId, err := repository.CreateUser(c, &user)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
@@ -48,7 +48,7 @@ func PostUser(repository models.UserRepository) gin.HandlerFunc {
 	}
 }
 
-func PutUser(repository models.UserRepository) gin.HandlerFunc {
+func UpdateUser(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, _ := primitive.ObjectIDFromHex(c.Param("id"))
 		var newUser models.User
@@ -56,7 +56,7 @@ func PutUser(repository models.UserRepository) gin.HandlerFunc {
 			return
 		}
 
-		user, err := repository.PutUser(c, id, newUser)
+		user, err := repository.UpdateUser(c, id, &newUser)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
