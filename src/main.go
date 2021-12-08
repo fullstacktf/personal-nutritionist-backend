@@ -25,7 +25,7 @@ func main() {
 		c.AbortWithStatus(http.StatusNotFound)
 	})
 
-	err := router.Run(":8080")
+	err := router.Run(":5000")
 	if err != nil {
 		log.Fatalln("Error running on port 💣:", err)
 	}

@@ -25,7 +25,7 @@ services:
       MONGO_URL: db
       ENV: local
     ports:
-      - "8080:8080"
+      - "5000:5000"
     networks:
       - nutriguide
 
