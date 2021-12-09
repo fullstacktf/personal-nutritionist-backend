@@ -11,7 +11,7 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.GET("/api", func(c *gin.Context) {
+	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "Welcome to Nutriguide mi cuaaaate 🌮🤠🥑",
 		})
@@ -25,7 +25,7 @@ func main() {
 		c.AbortWithStatus(http.StatusNotFound)
 	})
 
-	err := router.Run(":8080")
+	err := router.Run(":5000")
 	if err != nil {
 		log.Fatalln("Error running on port 💣:", err)
 	}
