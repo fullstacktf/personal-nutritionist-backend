@@ -10,7 +10,7 @@ import (
 func StartUsers(router *gin.Engine) {
 	userRepository := repositories.NewUserRepository(database.InitConnection())
 
-	users := router.Group("/api/users")
+	users := router.Group("/users")
 	{
 		users.GET("/", handlers.GetUsers(userRepository))
 		users.GET("/:id", handlers.GetUserByID(userRepository))

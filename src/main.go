@@ -13,7 +13,7 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.Default())
 
-	router.GET("/api", func(c *gin.Context) {
+	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "Welcome to Nutriguide mi cuaaaate 🌮🤠🥑",
 		})
