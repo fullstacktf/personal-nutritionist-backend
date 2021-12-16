@@ -11,19 +11,29 @@ type UserRepositoryMock struct {
 	mock.Mock
 }
 
+func (m *UserRepositoryMock) SignUp(c *gin.Context, user *models.User) (*string, error) {
+	args := m.Called(c, user)
+	return args.Get(0).(*string), args.Error(1)
+}
+
+func (m *UserRepositoryMock) LogIn(c *gin.Context, credential *models.Auth) (*string, error) {
+	args := m.Called(c, credential)
+	return args.Get(0).(*string), args.Error(1)
+}
+
 func (m *UserRepositoryMock) GetUsers(c *gin.Context) ([]models.User, error) {
 	args := m.Called(c)
+	return args.Get(0).([]models.User), args.Error(1)
+}
+
+func (m *UserRepositoryMock) GetUsersByRole(c *gin.Context, role string) ([]models.User, error) {
+	args := m.Called(c, role)
 	return args.Get(0).([]models.User), args.Error(1)
 }
 
 func (m *UserRepositoryMock) GetUserByID(c *gin.Context, id primitive.ObjectID) (*models.User, error) {
 	args := m.Called(c, id)
 	return args.Get(0).(*models.User), args.Error(1)
-}
-
-func (m *UserRepositoryMock) CreateUser(c *gin.Context, user *models.User) (primitive.ObjectID, error) {
-	args := m.Called(c, user)
-	return args.Get(0).(primitive.ObjectID), args.Error(1)
 }
 
 func (m *UserRepositoryMock) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser *models.User) (*models.User, error) {

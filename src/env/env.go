@@ -13,6 +13,7 @@ var (
 	MONGO_DATABASE string
 	MONGO_URL      string
 	MONGO_PORT     string
+	JWT_SECRET     string
 )
 
 func LoadEnv() {
@@ -29,6 +30,7 @@ func LoadEnv() {
 	MONGO_DATABASE = os.Getenv("MONGO_DATABASE")
 	MONGO_URL = os.Getenv("MONGO_URL")
 	MONGO_PORT = os.Getenv("MONGO_PORT")
+	JWT_SECRET = os.Getenv("JWT_SECRET")
 
 	log.Println("Environment variables loaded! 😊🪄")
 }

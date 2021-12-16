@@ -10,9 +10,9 @@ import (
 func StartEvents(router *gin.Engine) {
 	EventRepository := repositories.NewEventRepository(database.InitConnection())
 
-	events := router.Group("/users/:id/calendar")
+	events := router.Group("/calendar")
 	{
-		events.GET("/", handlers.GetEvents(EventRepository))
+		events.GET("/users/:id", handlers.GetEvents(EventRepository))
 		events.GET("/event/:idEvent", handlers.GetEventByID(EventRepository))
 		events.POST("/event", handlers.CreateEvent(EventRepository))
 		events.PUT("/event/:idEvent", handlers.UpdateEvent(EventRepository))
