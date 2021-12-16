@@ -8,6 +8,38 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+func SignUp(repository models.UserRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var user models.User
+		if err := c.BindJSON(&user); err != nil {
+			return
+		}
+
+		msg, err := repository.SignUp(c, &user)
+		if err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusCreated, msg)
+		}
+	}
+}
+
+func LogIn(repository models.UserRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var credential models.Auth
+		if err := c.BindJSON(&credential); err != nil {
+			return
+		}
+
+		msg, err := repository.LogIn(c, &credential)
+		if err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusOK, msg)
+		}
+	}
+}
+
 func GetUsers(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		users, err := repository.GetUsers(c)
@@ -32,18 +64,15 @@ func GetUserByID(repository models.UserRepository) gin.HandlerFunc {
 	}
 }
 
-func CreateUser(repository models.UserRepository) gin.HandlerFunc {
+func GetUsersByRole(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var user models.User
-		if err := c.BindJSON(&user); err != nil {
-			return
-		}
+		role := c.Param("role")
 
-		objectId, err := repository.CreateUser(c, &user)
+		users, err := repository.GetUsersByRole(c, role)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
-			c.IndentedJSON(http.StatusCreated, objectId)
+			c.IndentedJSON(http.StatusOK, users)
 		}
 	}
 }
