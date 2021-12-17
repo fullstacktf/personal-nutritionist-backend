@@ -26,7 +26,7 @@ func NewUserRepository(db *mongo.Database) models.UserRepository {
 func (r *UserRepository) SignUp(c *gin.Context, user *models.User) (*string, error) {
 	newUser, err := r.GetUserByUsernameAndPassword(user.Email, user.Password)
 	if err == nil {
-		return nil, errors.New("user" + newUser.Email + "already exists")
+		return nil, errors.New("user " + newUser.Email + " already exists")
 	}
 
 	user.ObjectID = primitive.NewObjectID()
