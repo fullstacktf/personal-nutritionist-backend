@@ -19,6 +19,7 @@ func main() {
 		})
 	})
 
+	routes.StartAuth(router)
 	routes.StartUsers(router)
 	routes.StartEvents(router)
 	routes.StartRecipes(router)
