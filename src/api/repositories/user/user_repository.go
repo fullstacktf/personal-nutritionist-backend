@@ -23,13 +23,17 @@ func NewUserRepository(db *mongo.Database) models.UserRepository {
 	}
 }
 
-func (r *UserRepository) SignUp(c *gin.Context, user *models.User) (*string, error) {
-	newUser, err := r.GetUserByUsernameAndPassword(user.Email, user.Password)
+func (r *UserRepository) SignUp(c *gin.Context, user *models.User) (*models.Token, error) {
+	newUser, err := r.GetUserByEmail(user.Email)
 	if err == nil {
 		return nil, errors.New("user " + newUser.Email + " already exists")
 	}
 
 	user.ObjectID = primitive.NewObjectID()
+	user.Password, err = services.GenerateHashPassword(user.Password)
+	if err != nil {
+		return nil, err
+	}
 
 	ctx, cancel := database.GetContext(r.db.Client())
 	defer database.DropConnection(r.db, ctx, cancel)
@@ -47,10 +51,15 @@ func (r *UserRepository) SignUp(c *gin.Context, user *models.User) (*string, err
 	return token, nil
 }
 
-func (r *UserRepository) LogIn(c *gin.Context, credential *models.Auth) (*string, error) {
-	user, err := r.GetUserByUsernameAndPassword(credential.Email, credential.Password)
+func (r *UserRepository) LogIn(c *gin.Context, credential *models.Auth) (*models.Token, error) {
+	user, err := r.GetUserByEmail(credential.Email)
 	if err != nil {
 		return nil, err
+	}
+
+	check := services.CheckHashPassword(credential.Password, user.Password)
+	if !check {
+		return nil, errors.New("incorrect password")
 	}
 
 	token, err := services.GenerateJWT(user.Email, user.Role)
@@ -121,14 +130,14 @@ func (r *UserRepository) GetUsersByRole(c *gin.Context, role string) ([]models.U
 	return users, nil
 }
 
-func (r *UserRepository) GetUserByUsernameAndPassword(email, password string) (*models.User, error) {
+func (r *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 
 	ctx, cancel := database.GetContext(r.db.Client())
 	defer database.DropConnection(r.db, ctx, cancel)
 
 	collection := r.db.Collection("users")
-	result := collection.FindOne(ctx, bson.D{{Key: "email", Value: email}, {Key: "password", Value: password}})
+	result := collection.FindOne(ctx, bson.D{{Key: "email", Value: email}})
 	if result == nil {
 		return nil, errors.New("failed to find an user")
 	}

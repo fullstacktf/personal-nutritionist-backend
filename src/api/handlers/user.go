@@ -15,11 +15,11 @@ func SignUp(repository models.UserRepository) gin.HandlerFunc {
 			return
 		}
 
-		msg, err := repository.SignUp(c, &user)
+		token, err := repository.SignUp(c, &user)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
-			c.IndentedJSON(http.StatusCreated, msg)
+			c.IndentedJSON(http.StatusCreated, token)
 		}
 	}
 }
@@ -31,11 +31,11 @@ func LogIn(repository models.UserRepository) gin.HandlerFunc {
 			return
 		}
 
-		msg, err := repository.LogIn(c, &credential)
+		token, err := repository.LogIn(c, &credential)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
-			c.IndentedJSON(http.StatusOK, msg)
+			c.IndentedJSON(http.StatusOK, token)
 		}
 	}
 }

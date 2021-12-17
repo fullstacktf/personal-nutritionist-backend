@@ -6,8 +6,8 @@ import (
 )
 
 type UserRepository interface {
-	SignUp(c *gin.Context, user *User) (*string, error)
-	LogIn(c *gin.Context, credential *Auth) (*string, error)
+	SignUp(c *gin.Context, user *User) (*Token, error)
+	LogIn(c *gin.Context, credential *Auth) (*Token, error)
 
 	GetUsers(c *gin.Context) ([]User, error)
 	GetUserByID(c *gin.Context, id primitive.ObjectID) (*User, error)
