@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/fullstacktf/personal-nutritionist-backend/api/models"
 	"github.com/fullstacktf/personal-nutritionist-backend/env"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -16,7 +17,7 @@ type AuthClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(email, role string) (*string, error) {
+func GenerateJWT(email, role string) (*models.Token, error) {
 	key := []byte(env.JWT_SECRET)
 	claims := AuthClaims{
 		true,
@@ -32,8 +33,9 @@ func GenerateJWT(email, role string) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
+	tokenStruct := models.Token{Email: email, Role: role, TokenString: signedToken}
 
-	return &signedToken, nil
+	return &tokenStruct, nil
 }
 
 func ValidateToken(encodedToken string) (*jwt.Token, error) {
@@ -56,27 +58,8 @@ func ValidateToken(encodedToken string) (*jwt.Token, error) {
 			log.Panicln("Eres un nutricionista")
 		} else if claims["role"] == "Cliente" {
 			log.Panicln("Eres un cliente")
-
 		}
 	}
 
 	return token, nil
 }
-
-// // func parseToken() {
-// // 	receivedToken := "xxxxx.yyyyy.zzzzz"
-
-// // 	token, err := jwt.Parse(receivedToken, func(token *jwt.Token) (interface{}, error) {
-// // 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-// // 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-// // 		}
-
-// // 		return env.JWT_SECRET, nil
-// // 	})
-
-// // 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-// // 		fmt.Println(claims["email"], claims["birthday"])
-// // 	} else {
-// // 		fmt.Println(err)
-// // 	}
-// // }

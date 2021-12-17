@@ -19,30 +19,30 @@ var usersMock = []models.User{
 	{ObjectID: primitive.NewObjectID(), Name: "Godhito", Email: "damecomidah@gmail.com", Dni: "87654321P", Username: "Adanito", TypeDiet: "Hypercaloric", Weight: 120, Height: 160, Role: "Client", Password: "1234"},
 	{ObjectID: primitive.NewObjectID(), Name: "Sarah Vaughan", Dni: "12345678P", TypeDiet: "vegetarian", Weight: 60, Height: 173, Role: "Client", Password: "1234"},
 }
-
 var credentialMock = models.Auth{Email: "sergiopeinado@gmail.com", Password: "1234"}
-
+var tokenMock = models.Token{Email: "sergiopeinado@gmail.com", Role: "Nutricionista", TokenString: "token de prueba"}
 var userErrorMock = Error{Message: "error de usuario", Status: "💣"}
 
 func TestSignUp(t *testing.T) {
 	t.Run("should return status OK and message", func(t *testing.T) {
 		setUp()
-		userRepositoryMock.On("SignUp", mock.AnythingOfType("*gin.Context"), &usersMock[0]).Return(&usersMock[0].Name, nil)
+		userRepositoryMock.On("SignUp", mock.AnythingOfType("*gin.Context"), &usersMock[0]).Return(&tokenMock, nil)
 		context.POST("/auth/signup", handlers.SignUp(userRepositoryMock))
 
 		reqBody, err := json.Marshal(usersMock[0])
 		require.NoError(t, err)
 		res, rec := executeRequest(t, http.MethodPost, "/auth/signup", string(reqBody))
 
-		expect := "\"" + usersMock[0].Name + "\""
+		formerBody, err := json.MarshalIndent(tokenMock, "", "    ")
+		require.NoError(t, err)
 
 		assert.Equal(t, http.StatusCreated, res.StatusCode, "they should be equal 💣")
-		assert.Equal(t, expect, rec.Body.String(), "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
 	})
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		userRepositoryMock.On("SignUp", mock.AnythingOfType("*gin.Context"), &usersMock[0]).Return(&usersMock[0].Name, errors.New("error de usuario"))
+		userRepositoryMock.On("SignUp", mock.AnythingOfType("*gin.Context"), &usersMock[0]).Return(&models.Token{}, errors.New("error de usuario"))
 		context.POST("/auth/signup", handlers.SignUp(userRepositoryMock))
 
 		reqBody, err := json.Marshal(usersMock[0])
@@ -60,22 +60,23 @@ func TestSignUp(t *testing.T) {
 func TestLogIn(t *testing.T) {
 	t.Run("should return status OK and message", func(t *testing.T) {
 		setUp()
-		userRepositoryMock.On("LogIn", mock.AnythingOfType("*gin.Context"), &credentialMock).Return(&credentialMock.Email, nil)
+		userRepositoryMock.On("LogIn", mock.AnythingOfType("*gin.Context"), &credentialMock).Return(&tokenMock, nil)
 		context.POST("/auth/login", handlers.LogIn(userRepositoryMock))
 
 		reqBody, err := json.Marshal(credentialMock)
 		require.NoError(t, err)
 		res, rec := executeRequest(t, http.MethodPost, "/auth/login", string(reqBody))
 
-		expect := "\"" + credentialMock.Email + "\""
+		formerBody, err := json.MarshalIndent(tokenMock, "", "    ")
+		require.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode, "they should be equal 💣")
-		assert.Equal(t, expect, rec.Body.String(), "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
 	})
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		userRepositoryMock.On("LogIn", mock.AnythingOfType("*gin.Context"), &credentialMock).Return(&credentialMock.Email, errors.New("error de usuario"))
+		userRepositoryMock.On("LogIn", mock.AnythingOfType("*gin.Context"), &credentialMock).Return(&models.Token{}, errors.New("error de usuario"))
 		context.POST("/auth/login", handlers.LogIn(userRepositoryMock))
 
 		reqBody, err := json.Marshal(credentialMock)

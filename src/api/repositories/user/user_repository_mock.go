@@ -11,14 +11,14 @@ type UserRepositoryMock struct {
 	mock.Mock
 }
 
-func (m *UserRepositoryMock) SignUp(c *gin.Context, user *models.User) (*string, error) {
+func (m *UserRepositoryMock) SignUp(c *gin.Context, user *models.User) (*models.Token, error) {
 	args := m.Called(c, user)
-	return args.Get(0).(*string), args.Error(1)
+	return args.Get(0).(*models.Token), args.Error(1)
 }
 
-func (m *UserRepositoryMock) LogIn(c *gin.Context, credential *models.Auth) (*string, error) {
+func (m *UserRepositoryMock) LogIn(c *gin.Context, credential *models.Auth) (*models.Token, error) {
 	args := m.Called(c, credential)
-	return args.Get(0).(*string), args.Error(1)
+	return args.Get(0).(*models.Token), args.Error(1)
 }
 
 func (m *UserRepositoryMock) GetUsers(c *gin.Context) ([]models.User, error) {
