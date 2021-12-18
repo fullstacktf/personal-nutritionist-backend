@@ -151,6 +151,12 @@ func (r *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 }
 
 func (r *UserRepository) UpdateUser(c *gin.Context, id primitive.ObjectID, newUser *models.User) (*models.User, error) {
+	var err error
+	newUser.Password, err = services.GenerateHashPassword(newUser.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	opts := options.FindOneAndUpdate().SetUpsert(false)
 	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.M{"$set": newUser}
@@ -160,7 +166,7 @@ func (r *UserRepository) UpdateUser(c *gin.Context, id primitive.ObjectID, newUs
 	defer database.DropConnection(r.db, ctx, cancel)
 
 	collection := r.db.Collection("users")
-	err := collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user)
+	err = collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
