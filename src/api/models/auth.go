@@ -6,7 +6,6 @@ type Auth struct {
 }
 
 type Token struct {
-	Email       string `json:"email"`
-	Role        string `json:"role"`
+	User        *User  `json:"user"`
 	TokenString string `json:"token"`
 }

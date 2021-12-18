@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/fullstacktf/personal-nutritionist-backend/api/models"
+	"github.com/fullstacktf/personal-nutritionist-backend/services"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -12,6 +13,12 @@ func SignUp(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 		if err := c.BindJSON(&user); err != nil {
+			return
+		}
+
+		valid := services.ValidateData(user)
+		if !valid {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": "invalid data inputs"})
 			return
 		}
 
@@ -28,6 +35,12 @@ func LogIn(repository models.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var credential models.Auth
 		if err := c.BindJSON(&credential); err != nil {
+			return
+		}
+
+		valid := services.ValidateData(credential)
+		if !valid {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": "invalid data inputs"})
 			return
 		}
 
@@ -82,6 +95,12 @@ func UpdateUser(repository models.UserRepository) gin.HandlerFunc {
 		id, _ := primitive.ObjectIDFromHex(c.Param("id"))
 		var newUser models.User
 		if err := c.BindJSON(&newUser); err != nil {
+			return
+		}
+
+		valid := services.ValidateData(newUser)
+		if !valid {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": "invalid data inputs"})
 			return
 		}
 

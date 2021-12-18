@@ -17,12 +17,12 @@ type AuthClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(email, role string) (*models.Token, error) {
+func GenerateJWT(user *models.User) (*models.Token, error) {
 	key := []byte(env.JWT_SECRET)
 	claims := AuthClaims{
 		true,
-		email,
-		role,
+		user.Email,
+		user.Role,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Unix(time.Now().Add(time.Minute*30).Unix(), 0)),
 		},
@@ -33,7 +33,7 @@ func GenerateJWT(email, role string) (*models.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	tokenStruct := models.Token{Email: email, Role: role, TokenString: signedToken}
+	tokenStruct := models.Token{User: user, TokenString: signedToken}
 
 	return &tokenStruct, nil
 }

@@ -43,7 +43,7 @@ func (r *UserRepository) SignUp(c *gin.Context, user *models.User) (*models.Toke
 		return nil, err
 	}
 
-	token, err := services.GenerateJWT(user.Email, user.Role)
+	token, err := services.GenerateJWT(user)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (r *UserRepository) LogIn(c *gin.Context, credential *models.Auth) (*models
 		return nil, errors.New("incorrect password")
 	}
 
-	token, err := services.GenerateJWT(user.Email, user.Role)
+	token, err := services.GenerateJWT(user)
 	if err != nil {
 		return nil, err
 	}
