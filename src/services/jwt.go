@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"github.com/fullstacktf/personal-nutritionist-backend/api/models"
@@ -39,27 +38,10 @@ func GenerateJWT(user *models.User) (*models.Token, error) {
 }
 
 func ValidateToken(encodedToken string) (*jwt.Token, error) {
-	key := []byte(env.JWT_SECRET)
-
-	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
+	return jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
 		if _, isValid := token.Method.(*jwt.SigningMethodHMAC); !isValid {
 			return nil, errors.New("invalid token")
 		}
-		return key, nil
+		return []byte(env.JWT_SECRET), nil
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	log.Println(("Llego aqui"))
-
-	if claims, isValid := token.Claims.(jwt.MapClaims); isValid && token.Valid {
-		if claims["role"] == "Nutricionista" {
-			log.Panicln("Eres un nutricionista")
-		} else if claims["role"] == "Cliente" {
-			log.Panicln("Eres un cliente")
-		}
-	}
-
-	return token, nil
 }
