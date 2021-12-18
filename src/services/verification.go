@@ -7,7 +7,7 @@ import (
 )
 
 func isValidInput(data string) bool {
-	valid, _ := regexp.MatchString(`^[a-zA-Z0-9À-ÿ/./,/(/)-://\s]*$`, data)
+	valid, _ := regexp.MatchString(`^[a-zA-Z0-9À-ÿ/./,/(/)/!/¡/¿/?/#/^/@/%/*-://\s]*$`, data)
 	return valid
 }
 
