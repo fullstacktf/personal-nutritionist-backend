@@ -15,16 +15,16 @@ import (
 )
 
 var usersMock = []models.User{
-	{ObjectID: primitive.NewObjectID(), Name: "Sergio Peinado", Email: "sergiopeinado@gmail.com", Role: "Nutritionist", Username: "Sergito", Dni: "41257854L", Phone: 612732894, Likes: 157770, IsVerified: true, Password: "1234"},
-	{ObjectID: primitive.NewObjectID(), Name: "Godhito", Email: "damecomidah@gmail.com", Dni: "87654321P", Username: "Adanito", TypeDiet: "Hypercaloric", Weight: 120, Height: 160, Role: "Client", Password: "1234"},
-	{ObjectID: primitive.NewObjectID(), Name: "Sarah Vaughan", Dni: "12345678P", TypeDiet: "vegetarian", Weight: 60, Height: 173, Role: "Client", Password: "1234"},
+	{ObjectID: primitive.NewObjectID(), Name: "Sergio Peinado", Email: "sergiopeinado@gmail.com", Role: "Nutritionist", Username: "Sergito", Dni: "41257854L", Phone: 612732894, Likes: 157770, IsVerified: true, Password: "1234aA5678"},
+	{ObjectID: primitive.NewObjectID(), Name: "Godhito", Email: "damecomidah@gmail.com", Dni: "87654321P", Username: "Adanito", TypeDiet: "Hypercaloric", Weight: 120, Height: 160, Role: "Client", Password: "1234aA5678"},
+	{ObjectID: primitive.NewObjectID(), Name: "Sarah Vaughan", Dni: "12345678P", TypeDiet: "vegetarian", Weight: 60, Height: 173, Role: "Client", Password: "12334554aA4"},
 }
-var credentialMock = models.Auth{Email: "sergiopeinado@gmail.com", Password: "1234"}
-var tokenMock = models.Token{Email: "sergiopeinado@gmail.com", Role: "Nutricionista", TokenString: "token de prueba"}
+var credentialMock = models.Auth{Email: "sergiopeinado@gmail.com", Password: "1234aA5678"}
+var tokenMock = models.Token{User: &usersMock[0], TokenString: "token de prueba"}
 var userErrorMock = Error{Message: "error de usuario", Status: "💣"}
 
 func TestSignUp(t *testing.T) {
-	t.Run("should return status OK and message", func(t *testing.T) {
+	t.Run("should return status OK and token", func(t *testing.T) {
 		setUp()
 		userRepositoryMock.On("SignUp", mock.AnythingOfType("*gin.Context"), &usersMock[0]).Return(&tokenMock, nil)
 		context.POST("/auth/signup", handlers.SignUp(userRepositoryMock))
@@ -58,7 +58,7 @@ func TestSignUp(t *testing.T) {
 }
 
 func TestLogIn(t *testing.T) {
-	t.Run("should return status OK and message", func(t *testing.T) {
+	t.Run("should return status OK and token", func(t *testing.T) {
 		setUp()
 		userRepositoryMock.On("LogIn", mock.AnythingOfType("*gin.Context"), &credentialMock).Return(&tokenMock, nil)
 		context.POST("/auth/login", handlers.LogIn(userRepositoryMock))

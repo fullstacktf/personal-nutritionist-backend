@@ -8,7 +8,7 @@ type BasicUser struct {
 	ObjectID   primitive.ObjectID `json:"_id" bson:"_id"`
 	Name       string             `json:"name" bson:"name" binding:"required"`
 	Email      string             `json:"email" bson:"email" binding:"required"`
-	Phone      uint32             `json:"phone" bson:"phone"`
+	Phone      uint32             `json:"phone" bson:"phone" binding:"required"`
 	Photo      string             `json:"photo" bson:"photo"`
 	IsVerified bool               `json:"isVerified" bson:"isVerified"`
 }

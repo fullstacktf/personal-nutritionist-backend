@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/fullstacktf/personal-nutritionist-backend/api/models"
+	"github.com/fullstacktf/personal-nutritionist-backend/services"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -39,6 +40,12 @@ func CreateRecipe(repository models.RecipeRepository) gin.HandlerFunc {
 			return
 		}
 
+		valid := services.ValidateData(recipe)
+		if !valid {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": "invalid data inputs"})
+			return
+		}
+
 		objectId, err := repository.CreateRecipe(c, &recipe)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
@@ -53,6 +60,12 @@ func UpdateRecipe(repository models.RecipeRepository) gin.HandlerFunc {
 		id, _ := primitive.ObjectIDFromHex(c.Param("idRecipe"))
 		var newRecipe models.Recipe
 		if err := c.BindJSON(&newRecipe); err != nil {
+			return
+		}
+
+		valid := services.ValidateData(newRecipe)
+		if !valid {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": "invalid data inputs"})
 			return
 		}
 
