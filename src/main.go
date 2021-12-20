@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/fullstacktf/personal-nutritionist-backend/api/routes"
 	"github.com/gin-contrib/cors"
@@ -11,7 +12,12 @@ import (
 
 func main() {
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders: []string{"*"},
+		MaxAge:       12 * time.Hour,
+	}))
 
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
