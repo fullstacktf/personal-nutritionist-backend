@@ -35,22 +35,22 @@ func GetEventByID(repository models.EventRepository) gin.HandlerFunc {
 
 func CreateEvent(repository models.EventRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var event models.Event
-		if err := c.BindJSON(&event); err != nil {
+		var newEvent models.Event
+		if err := c.BindJSON(&newEvent); err != nil {
 			return
 		}
 
-		valid := services.ValidateData(event)
+		valid := services.ValidateData(newEvent)
 		if !valid {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": "invalid data inputs"})
 			return
 		}
 
-		objectId, err := repository.CreateEvent(c, &event)
+		event, err := repository.CreateEvent(c, &newEvent)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
-			c.IndentedJSON(http.StatusCreated, objectId)
+			c.IndentedJSON(http.StatusCreated, event)
 		}
 	}
 }
