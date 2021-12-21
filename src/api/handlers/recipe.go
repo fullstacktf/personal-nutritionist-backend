@@ -35,22 +35,22 @@ func GetRecipeByID(repository models.RecipeRepository) gin.HandlerFunc {
 
 func CreateRecipe(repository models.RecipeRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var recipe models.Recipe
-		if err := c.BindJSON(&recipe); err != nil {
+		var newRecipe models.Recipe
+		if err := c.BindJSON(&newRecipe); err != nil {
 			return
 		}
 
-		valid := services.ValidateData(recipe)
+		valid := services.ValidateData(newRecipe)
 		if !valid {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": "invalid data inputs"})
 			return
 		}
 
-		objectId, err := repository.CreateRecipe(c, &recipe)
+		recipe, err := repository.CreateRecipe(c, &newRecipe)
 		if err != nil {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "💣", "message": err.Error()})
 		} else {
-			c.IndentedJSON(http.StatusCreated, objectId)
+			c.IndentedJSON(http.StatusCreated, recipe)
 		}
 	}
 }

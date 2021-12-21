@@ -80,22 +80,23 @@ func TestGetRecipeByID(t *testing.T) {
 func TestCreateRecipe(t *testing.T) {
 	t.Run("should return status OK and recipe", func(t *testing.T) {
 		setUp()
-		recipeRepositoryMock.On("CreateRecipe", mock.AnythingOfType("*gin.Context"), &recipesMock[0]).Return(recipesMock[0].ObjectID, nil)
+		recipeRepositoryMock.On("CreateRecipe", mock.AnythingOfType("*gin.Context"), &recipesMock[0]).Return(&recipesMock[0], nil)
 		context.POST("/weekmeal/recipe", handlers.CreateRecipe(recipeRepositoryMock))
 
 		reqBody, err := json.Marshal(recipesMock[0])
 		require.NoError(t, err)
 		res, rec := executeRequest(t, http.MethodPost, "/weekmeal/recipe", string(reqBody))
 
-		expect := "\"" + recipesMock[0].ObjectID.Hex() + "\""
+		formerBody, err := json.MarshalIndent(recipesMock[0], "", "    ")
+		require.NoError(t, err)
 
 		assert.Equal(t, http.StatusCreated, res.StatusCode, "they should be equal 💣")
-		assert.Equal(t, expect, rec.Body.String(), "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
 	})
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		recipeRepositoryMock.On("CreateRecipe", mock.AnythingOfType("*gin.Context"), &recipesMock[0]).Return(primitive.NilObjectID, errors.New("error de receta"))
+		recipeRepositoryMock.On("CreateRecipe", mock.AnythingOfType("*gin.Context"), &recipesMock[0]).Return(&models.Recipe{}, errors.New("error de receta"))
 		context.POST("/weekmeal/recipe", handlers.CreateRecipe(recipeRepositoryMock))
 
 		reqBody, err := json.Marshal(recipesMock[0])

@@ -81,22 +81,23 @@ func TestGetEventByID(t *testing.T) {
 func TestCreateEvent(t *testing.T) {
 	t.Run("should return status OK and event", func(t *testing.T) {
 		setUp()
-		eventRepositoryMock.On("CreateEvent", mock.AnythingOfType("*gin.Context"), &eventsMock[0]).Return(eventsMock[0].ObjectID, nil)
+		eventRepositoryMock.On("CreateEvent", mock.AnythingOfType("*gin.Context"), &eventsMock[0]).Return(&eventsMock[0], nil)
 		context.POST("/calendar/event", handlers.CreateEvent(eventRepositoryMock))
 
 		reqBody, err := json.Marshal(eventsMock[0])
 		require.NoError(t, err)
 		res, rec := executeRequest(t, http.MethodPost, "/calendar/event", string(reqBody))
 
-		expect := "\"" + eventsMock[0].ObjectID.Hex() + "\""
+		formerBody, err := json.MarshalIndent(eventsMock[0], "", "    ")
+		require.NoError(t, err)
 
 		assert.Equal(t, http.StatusCreated, res.StatusCode, "they should be equal 💣")
-		assert.Equal(t, expect, rec.Body.String(), "they should be equal 💣")
+		assert.Equal(t, string(formerBody), rec.Body.String(), "they should be equal 💣")
 	})
 
 	t.Run("should return error status and error message", func(t *testing.T) {
 		setUp()
-		eventRepositoryMock.On("CreateEvent", mock.AnythingOfType("*gin.Context"), &eventsMock[0]).Return(primitive.NilObjectID, errors.New("error de evento"))
+		eventRepositoryMock.On("CreateEvent", mock.AnythingOfType("*gin.Context"), &eventsMock[0]).Return(&models.Event{}, errors.New("error de evento"))
 		context.POST("/calendar/event", handlers.CreateEvent(eventRepositoryMock))
 
 		reqBody, err := json.Marshal(eventsMock[0])

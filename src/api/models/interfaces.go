@@ -19,7 +19,7 @@ type UserRepository interface {
 type EventRepository interface {
 	GetEvents(c *gin.Context) ([]Event, error)
 	GetEventByID(c *gin.Context, id primitive.ObjectID) (*Event, error)
-	CreateEvent(c *gin.Context, event *Event) (primitive.ObjectID, error)
+	CreateEvent(c *gin.Context, event *Event) (*Event, error)
 	UpdateEvent(c *gin.Context, id primitive.ObjectID, newEvent *Event) (*Event, error)
 	DeleteEvent(c *gin.Context, id primitive.ObjectID) (*Event, error)
 }
@@ -27,7 +27,7 @@ type EventRepository interface {
 type RecipeRepository interface {
 	GetRecipes(c *gin.Context) ([]Recipe, error)
 	GetRecipeByID(c *gin.Context, id primitive.ObjectID) (*Recipe, error)
-	CreateRecipe(c *gin.Context, recipe *Recipe) (primitive.ObjectID, error)
+	CreateRecipe(c *gin.Context, recipe *Recipe) (*Recipe, error)
 	UpdateRecipe(c *gin.Context, id primitive.ObjectID, newRecipe *Recipe) (*Recipe, error)
 	DeleteRecipe(c *gin.Context, id primitive.ObjectID) (*Recipe, error)
 }

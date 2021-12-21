@@ -21,9 +21,9 @@ func (m *EventRepositoryMock) GetEventByID(c *gin.Context, id primitive.ObjectID
 	return args.Get(0).(*models.Event), args.Error(1)
 }
 
-func (m *EventRepositoryMock) CreateEvent(c *gin.Context, event *models.Event) (primitive.ObjectID, error) {
+func (m *EventRepositoryMock) CreateEvent(c *gin.Context, event *models.Event) (*models.Event, error) {
 	args := m.Called(c, event)
-	return args.Get(0).(primitive.ObjectID), args.Error(1)
+	return args.Get(0).(*models.Event), args.Error(1)
 }
 
 func (m *EventRepositoryMock) UpdateEvent(c *gin.Context, id primitive.ObjectID, newEvent *models.Event) (*models.Event, error) {

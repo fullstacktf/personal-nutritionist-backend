@@ -62,20 +62,18 @@ func (r *EventRepository) GetEventByID(c *gin.Context, id primitive.ObjectID) (*
 	return &event, nil
 }
 
-func (r *EventRepository) CreateEvent(c *gin.Context, event *models.Event) (primitive.ObjectID, error) {
+func (r *EventRepository) CreateEvent(c *gin.Context, event *models.Event) (*models.Event, error) {
 	event.ObjectID = primitive.NewObjectID()
 
 	ctx, cancel := database.GetContext(r.db.Client())
 	defer database.DropConnection(r.db, ctx, cancel)
 
 	collection := r.db.Collection("events")
-	result, err := collection.InsertOne(ctx, event)
-	if err != nil {
-		return primitive.NilObjectID, err
+	if _, err := collection.InsertOne(ctx, event); err != nil {
+		return nil, err
 	}
-	objectID := result.InsertedID.(primitive.ObjectID)
 
-	return objectID, nil
+	return event, nil
 }
 
 func (r *EventRepository) UpdateEvent(c *gin.Context, id primitive.ObjectID, newEvent *models.Event) (*models.Event, error) {

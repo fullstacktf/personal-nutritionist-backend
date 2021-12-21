@@ -9,14 +9,13 @@ import (
 )
 
 func StartEvents(router *gin.Engine) {
-	EventRepository := repositories.NewEventRepository(database.InitConnection())
-
+	eventRepository := repositories.NewEventRepository(database.InitConnection())
 	events := router.Group("/calendar", middlewares.IsAuthorized())
 	{
-		events.GET("/users/:id", handlers.GetEvents(EventRepository))
-		events.GET("/event/:idEvent", handlers.GetEventByID(EventRepository))
-		events.POST("/event", handlers.CreateEvent(EventRepository))
-		events.PUT("/event/:idEvent", handlers.UpdateEvent(EventRepository))
-		events.DELETE("/event/:idEvent", handlers.DeleteEvent(EventRepository))
+		events.GET("/users/:id", handlers.GetEvents(eventRepository))
+		events.GET("/event/:idEvent", handlers.GetEventByID(eventRepository))
+		events.POST("/event", handlers.CreateEvent(eventRepository))
+		events.PUT("/event/:idEvent", handlers.UpdateEvent(eventRepository))
+		events.DELETE("/event/:idEvent", handlers.DeleteEvent(eventRepository))
 	}
 }
