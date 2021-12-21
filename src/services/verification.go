@@ -21,7 +21,7 @@ func isValidUser(data string) bool {
 }
 
 func isValidPassword(data string) bool {
-	return len(data) >= 8 && len(data) <= 20 && isValidInput(data)
+	return len(data) >= 8 && isValidInput(data)
 }
 
 func ValidateData(data interface{}) bool {
