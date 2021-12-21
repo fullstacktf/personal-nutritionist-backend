@@ -10,7 +10,6 @@ import (
 
 func StartEvents(router *gin.Engine) {
 	eventRepository := repositories.NewEventRepository(database.InitConnection())
-
 	events := router.Group("/calendar", middlewares.IsAuthorized())
 	{
 		events.GET("/users/:id", handlers.GetEvents(eventRepository))
